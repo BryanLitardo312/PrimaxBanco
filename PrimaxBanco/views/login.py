@@ -17,8 +17,8 @@ def login():
                     height="110px",
                     margin_bottom="2em",
                 ),
-                rx.heading("Portal de Novedades", size="5", color=color_primary, margin_bottom="0.25em"),
-                rx.text("Ingreso de credenciales", size="2",color=color_primary, margin_bottom="0.25em"),
+                rx.heading("Banca Electrónica", size="5", color=color_primary, margin_bottom="0.4em"),
+                rx.text("Ingreso de credenciales", size="2",color=color_primary, margin_bottom="0.20em"),
                 rx.input(
                     placeholder="Usuario",
                     value=State.email,
@@ -26,8 +26,9 @@ def login():
                     width="100%",
                     border=f"1.5px solid {color_border}",
                     border_radius="md",
-                    padding="0.4em",
+                    padding="0.2em",
                     margin_bottom="0.5em",
+                    font_size="0.9rem",
                     size="3",
                 ),
                 rx.input(
@@ -40,6 +41,7 @@ def login():
                     border_radius="md",
                     padding="0.4em",
                     margin_bottom="0.5em",
+                    font_size="0.9rem",
                     size="3",
                 ),
                 rx.button(

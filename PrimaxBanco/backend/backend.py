@@ -173,7 +173,7 @@ class State(rx.State):
     def load_entries(self):
         start = (self.page - 1) * self.limit
         end = start + self.limit - 1
-        response = supabase.table("Novedades").select("*").range(start, end).execute()
+        response = supabase.table("Novedades").select("*").order("created_at", desc=True).range(start, end).execute()
         if response.data:
             self.novedades = response.data
         else:
