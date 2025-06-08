@@ -1,0 +1,59 @@
+import reflex as rx
+color_bg = "rgb(3, 3, 45)"
+
+"""def navbar():
+    return rx.flex(
+        rx.badge(
+            rx.icon(tag="table-2", size=28),
+            rx.heading("Customer Data App", size="6"),
+            color_scheme="green",
+            radius="large",
+            align="center",
+            variant="surface",
+            padding="0.65rem",
+        ),
+        rx.spacer(),
+        rx.hstack(
+            rx.logo(),
+            rx.color_mode.button(),
+            align="center",
+            spacing="3",
+        ),
+        spacing="2",
+        flex_direction=["column", "column", "row"],
+        align="center",
+        width="100%",
+        top="0px",
+        padding_top="2em",
+    )"""
+
+
+def navbar():
+    return rx.box(
+        rx.hstack(
+            # Logo a la izquierda
+            rx.image(
+                src="/primax_logo.png",
+                width="35px",
+                height="auto",
+                alt="Logo Primax",
+            ),
+            rx.spacer(),  # Empuja los botones a la derecha
+            # Botones a la derecha
+            rx.button(rx.hstack(rx.icon("Home"),rx.text("Inicio")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
+            rx.button(rx.hstack(rx.icon("Files"),rx.text("Novedades")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
+            rx.button(rx.hstack(rx.icon("log-out"),rx.text("Salir")), as_="a", href="/", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
+            spacing="5",
+            padding_x="2em",
+            height="65px",
+            align="center",
+        ),
+        width="100%",
+        #background="white",
+        #box_shadow="0 2px 8px rgba(0,0,0,0.04)",
+        #position="sticky",
+        #top="0",
+        #z_index="100",
+        margin_top="2em",
+        margin_bottom="2em",
+    )

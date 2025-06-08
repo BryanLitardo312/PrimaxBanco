@@ -1,0 +1,108 @@
+import reflex as rx
+from ..backend.backend import State
+
+color_bg = "#f5f7fa"         # Fondo suave corporativo
+color_primary = "#013220"    # Verde corporativo Primax
+color_border = "#013220"
+color_button = "#009639"     # Botón destacado
+
+@rx.page(route="/",title="Inicio de Sesión",description="Inicia sesión en Primax Banco")
+def login():
+    return rx.box(
+        rx.flex(
+            rx.vstack(
+                rx.image(
+                    src="/primax_logo.png",
+                    width="110px",
+                    height="110px",
+                    margin_bottom="2em",
+                ),
+                rx.heading("Portal de Novedades", size="5", color=color_primary, margin_bottom="0.25em"),
+                rx.text("Ingreso de credenciales", size="2",color=color_primary, margin_bottom="0.25em"),
+                rx.input(
+                    placeholder="Usuario",
+                    value=State.email,
+                    on_change=State.set_email,
+                    width="100%",
+                    border=f"1.5px solid {color_border}",
+                    border_radius="md",
+                    padding="0.4em",
+                    margin_bottom="0.5em",
+                    size="3",
+                ),
+                rx.input(
+                    placeholder="Contraseña",
+                    type="password",
+                    value=State.password,
+                    on_change=State.set_password,
+                    width="100%",
+                    border=f"1.5px solid {color_border}",
+                    border_radius="md",
+                    padding="0.4em",
+                    margin_bottom="0.5em",
+                    size="3",
+                ),
+                rx.button(
+                    "> > >",
+                    width="100%",
+                    #color="white",
+                    #background=color_button,
+                    color_scheme="green",
+                    variant="solid",
+                    border_radius="md",
+                    border=f"1.5px solid",
+                    size="3",
+                    font_weight="bold",
+                    margin_bottom="1.5em",
+                    on_click=lambda: State.login(State.email, State.password),  # Aquí iría tu lógica de login
+                ),
+                rx.link(
+                    rx.text(
+                        "¿Olvidaste tu contraseña?",
+                        color=color_primary,
+                        size="2",
+                        style={"textDecoration": "underline", "cursor": "pointer"},
+                    ),
+                    #href="#",
+                    on_click=State.open_dialog,
+                    margin_bottom="1em",
+                ),
+                rx.dialog.root(
+                    rx.dialog.trigger(rx.box()),  # Se puede usar un trigger vacío si abres manualmente
+                    rx.dialog.content(
+                        rx.vstack(
+                            rx.text("En caso de olvidar su contraseña, por favor contacte a soporte técnico.", size="3", color=color_primary),
+                            rx.dialog.close(
+                                rx.button(rx.hstack(rx.icon("x", size=20,color="white"), rx.text("Cerrar", size="3")),
+                                          on_click=State.close_dialog,
+                                          color_scheme="red",
+                                          size="3",)
+                            ),
+                            align="center",
+                        ),
+                    ),
+                    open=State.show_dialog,
+                    #on_open_change=lambda value: State.close_dialog() if not value else None,
+                ),
+                spacing="4",
+                align="center",
+                width="360px",
+                padding="3em",
+                border=f"2px solid {color_border}",
+                border_radius="10px",
+                background="white",
+                box_shadow="0 4px 24px rgba(0,0,0,0.08)",
+            ),
+            justify="start",
+            align="center",
+            padding_left="15%",
+            height="100vh",
+            width="100vw",
+        ),
+        width="100vw",
+        min_height="100vh",
+        #background_color=color_bg,
+        background_image="url('/portada.jpg')",
+        background_size="cover",
+        background_position="center",  # Cambia por la ruta de tu imagen de fondo
+    )
