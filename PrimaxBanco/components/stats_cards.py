@@ -20,8 +20,8 @@ def _arrow_badge(arrow_icon: str, percentage_change: float, arrow_color: str):
                 weight="medium",
             ),
             rx.text(
-                f"/semana",
-                size="2",
+                f" sucesos",
+                size="3",
                 color=rx.color(arrow_color, 9),
                 weight="medium",
             ),
@@ -34,6 +34,8 @@ def _arrow_badge(arrow_icon: str, percentage_change: float, arrow_color: str):
     )
 
 
+
+
 def stats_card(
     stat_name: str,
     value: int,
@@ -41,6 +43,7 @@ def stats_card(
     incremento: int,
     icon: str,
     icon_color: LiteralAccentColor,
+    texto: str,
     #extra_char: str = "",
 ) -> rx.Component:
     return rx.card(
@@ -87,7 +90,96 @@ def stats_card(
                 ),
                 
                 rx.text(
-                    "Reportadas por Estaciones de Servicio",
+                    texto,
+                    size="2",
+                    color=rx.color("gray", 11),
+                    #weight="bold",
+                ),
+                align_items="start",
+                justify="between",
+                width="100%",
+                spacing="1",
+            ),
+        size="3",
+        width="30%",
+        border="2px solid #e0e0e0",
+        box_shadow="0 4px 24px rgba(0,0,0,0.08)",
+        transition="box-shadow 0.2s",
+        _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "1.5px solid #009639"},
+        #max_width="20rem",
+    )
+
+def stats_card2(
+    stat_name: str,
+    value: int,
+    #prev_value: int,
+    incremento: int,
+    icon: str,
+    icon_color: LiteralAccentColor,
+    texto: str,
+    #extra_char: str = "",
+) -> rx.Component:
+    return rx.card(
+            rx.vstack(
+                rx.box(
+                    rx.hstack(
+                        rx.heading(
+                            f"{value}",
+                            size="8",
+                            weight="bold",
+                        ),
+                        rx.spacer(),
+                        rx.cond(
+                            incremento < 0,
+                            rx.badge(
+                                rx.icon(
+                                    tag="check",
+                                    color=rx.color("grass", 9),
+                                    size=15,
+                                ),
+                                rx.text("Al día", size="2", color=rx.color("grass", 9), weight="medium"),
+                                color_scheme="grass",
+                            ),
+                            rx.badge(
+                                rx.icon(
+                                    tag="ban",
+                                    color=rx.color("tomato", 9),
+                                    size=15,
+                                ),
+                                rx.text("Atrasado", size="2", color=rx.color("tomato", 9), weight="medium"),
+                                color_scheme="tomato",
+                            ),
+                        ),
+                        #spacing="6",
+                        #align='center',
+                        width="100%",
+                        justify="between",
+                    ),
+                    margin_bottom="0.7em",
+                    width="100%",
+                ),
+                rx.hstack(
+                    rx.hstack(
+                        rx.icon(
+                            tag=icon,
+                            size=22,
+                            color=rx.color(icon_color, 11),
+                        ),
+                        rx.text(
+                            stat_name,
+                            size="4",
+                            weight="medium",
+                            color="#000000",
+                        ),
+                        spacing="2",
+                        align="center",
+                    ),
+                    justify="between",
+                    width="100%",
+                ),
+                
+                rx.text(
+                    texto,
                     size="2",
                     color=rx.color("gray", 11),
                     #weight="bold",
@@ -113,25 +205,28 @@ def stats_cards_group() -> rx.Component:
             "Novedades bancarias",
             State.load_novedades,
             State.novedades_diarias,
-            "users",
+            "landmark",
             "blue",
+            "Procedimientos acumulados",
         ),
         rx.spacer(),
-        stats_card(
-            "Suministros Blindado",
-            State.load_suministros,
+        stats_card2(
+            "Procesos pendientes",
+            State.load_novedades_pendientes,
             State.novedades_diarias,
-            "dollar-sign",
+            "notebook-pen",
             "orange",
+            "Procedimientos sin respuesta",
             
         ),
         rx.spacer(),
         stats_card(
             "Retrasos y Quejas",
             State.load_quejas,
-            State.novedades_diarias,
+            State.quejas_diarias,
             "truck",
             "ruby",
+            "Procedimientos acumulados",
         ),
         align="center",
         justify="center",

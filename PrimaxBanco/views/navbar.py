@@ -1,4 +1,6 @@
 import reflex as rx
+from ..backend.backend import State
+
 color_bg = "rgb(3, 3, 45)"
 
 """def navbar():
@@ -42,7 +44,7 @@ def navbar():
             # Botones a la derecha
             rx.button(rx.hstack(rx.icon("Home"),rx.text("Inicio")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
             rx.button(rx.hstack(rx.icon("Files"),rx.text("Novedades")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
-            rx.button(rx.hstack(rx.icon("log-out"),rx.text("Salir")), as_="a", href="/", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
+            rx.button(rx.hstack(rx.icon("log-out"),rx.text("Salir")), as_="a", on_click=State.logout, style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
             spacing="5",
             padding_x="2em",
             height="65px",

@@ -30,5 +30,5 @@ def Novedades() -> rx.Component:
         justify="center",
         align="center",
         #padding_x=["2.5em", "2.5em", "3em"],
-        background_color="rgb(250, 250, 250)",
+        background_color="rgb(235, 235, 235)",
     )

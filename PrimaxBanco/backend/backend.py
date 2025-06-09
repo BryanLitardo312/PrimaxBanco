@@ -33,6 +33,7 @@ class Novedades(rx.Model, table=True):
     BODEGA: str
     COMENTARIOS: str
     URL_PUBLICA: str
+    USUARIO: str
 
     
 
@@ -128,6 +129,29 @@ class State(rx.State):
             print(resultados)
 
         return resultados
+    
+    @rx.var
+    def quejas_diarias(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Quejas") \
+                .select("id_quejas", count="exact") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            
+            #resultados.append({
+                #"fecha": dia.strftime("%Y-%m-%d"),
+                #"cantidad": count
+            #})
+            print(count)
+            resultados += count
+            print(resultados)
+
+        return resultados
             
 
     @rx.var
@@ -138,6 +162,14 @@ class State(rx.State):
         return 0
 
     @rx.var
+    def load_novedades_pendientes(self) -> int:
+        # Contar los registros donde URL_PUBLICA es None (null)
+        count_null = supabase.table("Novedades").select("*", count="exact").eq("URL_PUBLICA", None).execute().count or 0
+        # Contar los registros donde URL_PUBLICA es cadena vacía
+        count_empty = supabase.table("Novedades").select("*", count="exact").eq("URL_PUBLICA", "").execute().count or 0
+        return count_null + count_empty
+
+    @rx.var
     def load_suministros(self) -> int:
         # Lógica para cargar los datos de Supabase
         #directorio=supabase.table("Directorio_supa").select("Correo_EDS").eq("BOD", "E102").execute()
@@ -146,11 +178,12 @@ class State(rx.State):
             return directorio.count
         return 0
 
+
     @rx.var
     def load_quejas(self) -> int:
         # Lógica para cargar los datos de Supabase
         #directorio=supabase.table("Directorio_supa").select("Correo_EDS").eq("BOD", "E102").execute()
-        directorio = supabase.table("Quejas").select("*",count="exact").execute()
+        directorio = supabase.table("Quejas").select("*",count="exact").eq("proceso","Novedades bancarias").execute()
         if directorio.count is not None:
             return directorio.count
         return 0
@@ -198,6 +231,16 @@ class State(rx.State):
         except Exception as e:
             self.upload_status = f"Error al iniciar sesión: {str(e)}"
             print(f"Error de login: {str(e)}")
+
+    @rx.event
+    def logout(self):
+        try:
+            supabase.auth.sign_out()  # No asumas que retorna algo
+            self.upload_status = "Sesión cerrada exitosamente"
+            return rx.redirect("/")
+        except Exception as e:
+            self.upload_status = f"Error al cerrar sesión: {str(e)}"
+            print(f"Error de logout: {str(e)}")
 
 
     @rx.event
@@ -257,3 +300,9 @@ class State(rx.State):
                 except PermissionError as e:
                     print(f"No se pudo eliminar el archivo temporal: {e}")
 
+
+class UserState(rx.State):
+    logged_in: bool = False
+
+    def logout(self):
+        self.logged_in = False
