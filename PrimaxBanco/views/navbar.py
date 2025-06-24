@@ -34,28 +34,131 @@ def navbar():
     return rx.box(
         rx.hstack(
             # Logo a la izquierda
-            rx.image(
+            rx.box(
+                rx.image(
                 src="/primax_logo.png",
-                width="35px",
-                height="auto",
+                width="auto",
+                height="40px",
                 alt="Logo Primax",
+                ),
+                background_color="white",
+                border_radius="2em",
+                #width="100%",
             ),
             rx.spacer(),  # Empuja los botones a la derecha
             # Botones a la derecha
-            rx.button(rx.hstack(rx.icon("Home"),rx.text("Inicio")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
-            rx.button(rx.hstack(rx.icon("Files"),rx.text("Novedades")), as_="a", href="/novedades", style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
-            rx.button(rx.hstack(rx.icon("log-out"),rx.text("Salir")), as_="a", on_click=State.logout, style={"color": "black", "fontWeight": "bold"}, variant="ghost"),
-            spacing="5",
-            padding_x="2em",
-            height="65px",
+            rx.hstack(
+                rx.link(
+                    rx.text(
+                        "Inicio",
+                        size="4",
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.text(
+                        "Novedades",
+                        size="4",
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.text(
+                        "Suministros",
+                        size="4",
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.text(
+                        "Devoluciones",
+                        size="4",
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                spacing="9",
+                justify="between",
+                width="60%",
+            ),
+            rx.spacer(),
+            rx.box(
+                rx.text(State.email),
+                style={"fontWeight": "bold", "color": "grey"},
+                #height="100%",
+                display="flex",
+                align_items="center",
+                background_color="white",
+                border_radius="2em",
+                padding_x="2em",
+                height="40px",
+            ),
+            rx.box(
+                rx.button(
+                    rx.icon(tag="log-out", size=20),
+                    color_scheme="red",
+                    variant="ghost",
+                    size="4",
+                    width="100%",
+                    on_click=State.logout,
+                ),
+                style={"fontWeight": "bold", "color": "grey"},
+                #height="100%",
+                display="flex",
+                align_items="center",
+                background_color="white",
+                border_radius="2em",
+                padding_x="1em",
+                height="40px",
+            ),
+            #spacing="5",
+            padding_y="0.5em",
+            #height="65px",
             align="center",
+            width="100%",
+            #justify="between",
+
         ),
-        width="100%",
-        #background="white",
+        width="80%",
+        background_color="black",
         #box_shadow="0 2px 8px rgba(0,0,0,0.04)",
         #position="sticky",
         #top="0",
         #z_index="100",
         margin_top="2em",
         margin_bottom="2em",
+        border_radius="3em",
+        padding_left="0.6em",
+        padding_right="0.6em",
     )
