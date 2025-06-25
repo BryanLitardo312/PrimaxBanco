@@ -34,6 +34,10 @@ class Novedades(rx.Model, table=True):
     COMENTARIOS: str
     URL_PUBLICA: str
     USUARIO: str
+    STATUS: str
+    COMENTARIO_RECHAZO: str
+    FECHA_RECHAZO: str
+
 
     
 
@@ -119,12 +123,6 @@ class State(rx.State):
                 .gte("created_at", dia.isoformat()) \
                 .lt("created_at", dia_siguiente.isoformat()) \
                 .execute().count or 0
-            
-            #resultados.append({
-                #"fecha": dia.strftime("%Y-%m-%d"),
-                #"cantidad": count
-            #})
-            print(count)
             resultados += count
             print(resultados)
 
@@ -163,11 +161,9 @@ class State(rx.State):
 
     @rx.var
     def load_novedades_pendientes(self) -> int:
-        # Contar los registros donde URL_PUBLICA es None (null)
-        count_null = supabase.table("Novedades").select("*", count="exact").eq("URL_PUBLICA", None).execute().count or 0
-        # Contar los registros donde URL_PUBLICA es cadena vacía
-        count_empty = supabase.table("Novedades").select("*", count="exact").eq("URL_PUBLICA", "").execute().count or 0
-        return count_null + count_empty
+        count_null = supabase.table("Novedades").select("*", count="exact").is_("URL_PUBLICA", None).execute().count or 0
+        print(f"Count null: {count_null}")
+        return count_null
 
     @rx.var
     def load_suministros(self) -> int:

@@ -52,7 +52,8 @@ def stats_card(
                     rx.hstack(
                         rx.heading(
                             f"{value}",
-                            size="8",
+                            #size="8",
+                            style={"font_size": "2.5em"},
                             weight="bold",
                         ),
                         rx.spacer(),
@@ -70,42 +71,44 @@ def stats_card(
                     width="100%",
                 ),
                 rx.hstack(
-                    rx.hstack(
-                        rx.icon(
+                    rx.icon(
                             tag=icon,
-                            size=22,
+                            size=32,
                             color=rx.color(icon_color, 11),
-                        ),
+                    ),
+                    rx.vstack(
                         rx.text(
                             stat_name,
-                            size="4",
+                            size="3",
                             weight="medium",
                             color="#000000",
                         ),
-                        spacing="2",
-                        align="center",
+                        rx.text(
+                            texto,
+                            size="2",
+                            color=rx.color("gray", 11),
+                            #weight="bold",
+                        ),
+                        spacing="0",
+                        align="start",
                     ),
-                    justify="between",
+                    justify="start",
+                    align="center",
                     width="100%",
                 ),
                 
-                rx.text(
-                    texto,
-                    size="2",
-                    color=rx.color("gray", 11),
-                    #weight="bold",
-                ),
                 align_items="start",
                 justify="between",
                 width="100%",
-                spacing="1",
+                spacing="2",
             ),
+        padding="1.7em",
         size="3",
         width="30%",
-        border="2px solid #e0e0e0",
+        border="2px solid #0a0a0a",
         box_shadow="0 4px 24px rgba(0,0,0,0.08)",
         transition="box-shadow 0.2s",
-        _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "1.5px solid #009639"},
+        _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "3px solid #009639"},
         #max_width="20rem",
     )
 
@@ -125,7 +128,8 @@ def stats_card2(
                     rx.hstack(
                         rx.heading(
                             f"{value}",
-                            size="8",
+                            #size="8",
+                            style={"font_size": "2.5em"},
                             weight="bold",
                         ),
                         rx.spacer(),
@@ -159,42 +163,43 @@ def stats_card2(
                     width="100%",
                 ),
                 rx.hstack(
-                    rx.hstack(
-                        rx.icon(
+                    rx.icon(
                             tag=icon,
-                            size=22,
+                            size=32,
                             color=rx.color(icon_color, 11),
-                        ),
+                    ),
+                    rx.vstack(
                         rx.text(
                             stat_name,
-                            size="4",
+                            size="3",
                             weight="medium",
                             color="#000000",
                         ),
-                        spacing="2",
-                        align="center",
+                        rx.text(
+                            texto,
+                            size="2",
+                            color=rx.color("gray", 11),
+                            weight="light",
+                        ),
+                        spacing="0",
+                        align="start",
                     ),
-                    justify="between",
+                    justify="start",
+                    align="center",
                     width="100%",
-                ),
-                
-                rx.text(
-                    texto,
-                    size="2",
-                    color=rx.color("gray", 11),
-                    #weight="bold",
                 ),
                 align_items="start",
                 justify="between",
                 width="100%",
-                spacing="1",
+                spacing="2",
             ),
+        padding_y="1.7em",
         size="3",
         width="30%",
-        border="2px solid #e0e0e0",
+        border="2px solid #0a0a0a",
         box_shadow="0 4px 24px rgba(0,0,0,0.08)",
         transition="box-shadow 0.2s",
-        _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "1.5px solid #009639"},
+        _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "3px solid #009639"},
         #max_width="20rem",
     )
 
@@ -207,7 +212,7 @@ def stats_cards_group() -> rx.Component:
             State.novedades_diarias,
             "landmark",
             "blue",
-            "Procedimientos acumulados",
+            "Eventos acumulados",
         ),
         rx.spacer(),
         stats_card2(
@@ -216,7 +221,7 @@ def stats_cards_group() -> rx.Component:
             State.novedades_diarias,
             "notebook-pen",
             "orange",
-            "Procedimientos sin respuesta",
+            "Eventos acumulados",
             
         ),
         rx.spacer(),
@@ -226,7 +231,7 @@ def stats_cards_group() -> rx.Component:
             State.quejas_diarias,
             "truck",
             "ruby",
-            "Procedimientos acumulados",
+            "Eventos acumulados",
         ),
         align="center",
         justify="center",

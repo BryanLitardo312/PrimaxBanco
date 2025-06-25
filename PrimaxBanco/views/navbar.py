@@ -38,7 +38,7 @@ def navbar():
                 rx.image(
                 src="/primax_logo.png",
                 width="auto",
-                height="40px",
+                height="35px",
                 alt="Logo Primax",
                 ),
                 background_color="white",
@@ -122,7 +122,7 @@ def navbar():
                 background_color="white",
                 border_radius="2em",
                 padding_x="2em",
-                height="40px",
+                height="35px",
             ),
             rx.box(
                 rx.button(
@@ -140,10 +140,10 @@ def navbar():
                 background_color="white",
                 border_radius="2em",
                 padding_x="1em",
-                height="40px",
+                height="35px",
             ),
             #spacing="5",
-            padding_y="0.5em",
+            padding_y="0.6em",
             #height="65px",
             align="center",
             width="100%",
@@ -159,6 +159,6 @@ def navbar():
         margin_top="2em",
         margin_bottom="2em",
         border_radius="3em",
-        padding_left="0.6em",
-        padding_right="0.6em",
+        padding_left="0.7em",
+        padding_right="0.7em",
     )
