@@ -1,13 +1,16 @@
 from dotenv import load_dotenv
 import reflex as rx
-from pathlib import Path
 import os
 from supabase import create_client, Client
 from typing import Optional,List
 from sqlmodel import Field
 import time
 from datetime import datetime, timedelta
-
+import pandas as pd
+from io import BytesIO
+from io import StringIO
+from starlette.responses import StreamingResponse
+import csv
 
 load_dotenv()
 url: str = os.environ.get("SUPABASE_URL")
@@ -302,3 +305,28 @@ class UserState(rx.State):
 
     def logout(self):
         self.logged_in = False
+
+class Download(rx.State):
+
+    async def descargar_novedades_csv(self):
+        # Obtener los datos
+        data = self.novedades if hasattr(self, 'novedades') and self.novedades else []
+        
+        if not data:
+            response = supabase.table("Novedades").select("*").order("created_at", desc=True).execute()
+            data = response.data
+            if not data:
+                return rx.window_alert("No hay datos para descargar")
+
+        # Crear CSV en memoria
+        output = StringIO()
+        writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
+        writer.writeheader()
+        writer.writerows(data)
+        output.seek(0)
+        
+        # Devolver como descarga (versión corregida)
+        return rx.download(
+            data=output.getvalue(),
+            filename="novedades.csv"
+        )

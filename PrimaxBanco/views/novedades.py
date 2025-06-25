@@ -1,9 +1,8 @@
 import reflex as rx
-
 from ..components.stats_cards import stats_cards_group
 from .navbar import navbar
 from .table import main_table
-
+from ..backend.backend import Download
 
 
 @rx.page(route="/novedades", title="Primax Banco", description="La organización es eficiencia")
@@ -11,6 +10,11 @@ def Novedades() -> rx.Component:
     return rx.vstack(
         navbar(),
         stats_cards_group(),
+        rx.button(
+            "Descargar CSV",
+            on_click=Download.descargar_novedades_csv,
+            color_scheme="blue",
+        ),
         rx.center(
             main_table(),
             width="90%",
