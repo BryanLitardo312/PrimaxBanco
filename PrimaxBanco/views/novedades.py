@@ -3,29 +3,21 @@ from ..components.stats_cards import stats_cards_group
 from .navbar import navbar
 from .table import main_table
 from ..backend.backend import Download, State
-
+from ..components.table_actions import comandos
 
 @rx.page(route="/novedades", title="Primax Banco", description="La organización es eficiencia")
 def Novedades() -> rx.Component:
     return rx.vstack(
         navbar(),
         stats_cards_group(),
-        rx.input(
-            placeholder="Buscar por código secuencial",
-            value=State.codigo_busqueda,
-            on_change=lambda value: State.buscar_por_codigo(value),
-            width="250px",
+        rx.heading(
+            "Novedades bancarias",
+            size="6",
+            color="black",
+            text_align="center",
         ),
-        rx.select(
-            ["Pendiente", "Finalizado", "Rechazado"],
-            placeholder="Filtrar por estado",
-            on_change=lambda value: State.load_entries(value),
-        ),
-        rx.button(
-            "Descargar CSV",
-            on_click=Download.descargar_novedades_csv,
-            color_scheme="blue",
-        ),
+        rx.box(height="1.5em"),
+        comandos(),
         rx.center(
             main_table(),
             width="90%",

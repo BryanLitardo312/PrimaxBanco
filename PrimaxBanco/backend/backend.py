@@ -328,7 +328,7 @@ class Download(rx.State):
 
         data = self.novedades if hasattr(self, 'novedades') and self.novedades else []        
         if not data:
-            response = supabase.table("Novedades").select("*").order("created_at", desc=True).execute()
+            response = supabase.table("Novedades").select("No, FECHA, REF, LUGAR, DETALLE, SECUENCIAL, SIGNO, VALOR, DESCRIPCION, STATUS, COMENTARIO_RECHAZO, FECHA_RECHAZO").order("created_at", desc=True).execute()
             data = response.data
             if not data:
                 return

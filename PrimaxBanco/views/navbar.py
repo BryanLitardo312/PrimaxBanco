@@ -51,7 +51,7 @@ def navbar():
                 rx.link(
                     rx.text(
                         "Inicio",
-                        size="4",
+                        size="3",
                         style={
                             "color": "white",
                             "fontWeight": "medium",
@@ -66,7 +66,7 @@ def navbar():
                 rx.link(
                     rx.text(
                         "Novedades",
-                        size="4",
+                        size="3",
                         style={
                             "color": "white",
                             "fontWeight": "medium",
@@ -81,7 +81,7 @@ def navbar():
                 rx.link(
                     rx.text(
                         "Suministros",
-                        size="4",
+                        size="3",
                         style={
                             "color": "white",
                             "fontWeight": "medium",
@@ -96,7 +96,7 @@ def navbar():
                 rx.link(
                     rx.text(
                         "Devoluciones",
-                        size="4",
+                        size="3",
                         style={
                             "color": "white",
                             "fontWeight": "medium",
@@ -116,17 +116,17 @@ def navbar():
             rx.box(
                 rx.text(State.email),
                 style={"fontWeight": "medium", "color": "grey"},
-                #height="100%",
                 display="flex",
-                align_items="center",
                 background_color="white",
                 border_radius="2em",
                 padding_x="2em",
                 height="35px",
+                #display=["none", "none", "block"],
+                align_items="center",
             ),
             rx.box(
                 rx.button(
-                    rx.icon(tag="log-out", size=20),
+                    rx.icon(tag="log-out", size=22),
                     color_scheme="red",
                     variant="ghost",
                     size="4",
@@ -139,7 +139,7 @@ def navbar():
                 align_items="center",
                 background_color="white",
                 border_radius="2em",
-                padding_x="1em",
+                padding_x="1.5em",
                 height="35px",
             ),
             #spacing="5",

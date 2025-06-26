@@ -16,7 +16,8 @@ def show_customer(novedad: dict):
         rx.table.cell(novedad.get("LUGAR", "")),
         rx.table.cell(novedad.get("DETALLE", "")),
         rx.table.cell(novedad.get("SECUENCIAL", "")),
-        rx.table.cell(f'{novedad.get("SIGNO", "")} {novedad.get("VALOR", "")}',align='right'),
+        rx.table.cell(f'{novedad.get("SIGNO", "")} ${novedad.get("VALOR", "")}',align='center'),
+        rx.table.cell(rx.badge(novedad.get("id", ""), color_scheme="blue",size="3"),align="center",style={"fontWeight": "bold", "size": "2em"}),
         rx.table.cell(
             rx.match(
                 novedad.get("STATUS"),
@@ -30,16 +31,6 @@ def show_customer(novedad: dict):
         #rx.table.cell(novedad.get("VALOR", "")),
         #rx.table.cell(novedad.get("DESCRIPCION", "")),
         rx.table.cell(rx.moment(novedad.get("created_at", ""), format="DD/MM/YYYY"),align='center'),
-        #rx.table.cell(novedad.get("created_at", "")),
-        #rx.table.cell(
-            #rx.match(
-                #user.status,
-                #("Delivered", status_badge("Delivered")),
-                #("Pending", status_badge("Pending")),
-                #("Cancelled", status_badge("Cancelled")),
-                #status_badge("Pending"),
-            #)
-        #),
         rx.table.cell(
             rx.hstack(
                 rx.cond(
@@ -94,6 +85,7 @@ def main_table():
                     _header_cell("Detalle", "book-text"),
                     _header_cell("Secuencial", "binary"),
                     _header_cell("Valor", "circle-dollar-sign"),
+                    _header_cell("Orden", "album"),
                     _header_cell("Status", "map-pin-house"),
                     _header_cell("Ticket", "calendar-arrow-up"),
                     _header_cell("Actions", "cog"),

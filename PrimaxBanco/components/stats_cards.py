@@ -229,7 +229,7 @@ def stats_cards_group() -> rx.Component:
             "Retrasos y Quejas",
             State.load_quejas,
             State.quejas_diarias,
-            "truck",
+            "calendar-x-2",
             "ruby",
             "Eventos acumulados",
         ),
