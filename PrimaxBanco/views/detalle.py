@@ -33,25 +33,25 @@ def detalle():
                     State.novedad_detalle,
                     rx.vstack(
                         rx.hstack(
-                            rx.text(f"Novedad:",weight="bold",size="3"),
+                            rx.text(f"Novedad:",weight="medium",size="3"),
                             rx.text(f"{secuencial}",size="2"),
                         ),
                         rx.hstack(
-                            rx.text(f"Estación:",weight="bold",size="3"),
+                            rx.text(f"Estación:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('BODEGA', '')}-{State.novedad_detalle.get('EESS', '')}",size="2"),
                         ),
                         #rx.text(f"Bodega: {State.novedad_detalle.get('BODEGA', '')}"),
                         #rx.text(f"Estación: {State.novedad_detalle.get('EESS', '')}"),
                         rx.hstack(
-                            rx.text(f"Fecha:",weight="bold",size="3"),
+                            rx.text(f"Fecha:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2"),
                         ),
                         rx.hstack(
-                            rx.text(f"Descripción:",weight="bold",size="3"),
+                            rx.text(f"Descripción:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2"),
                         ),
                         rx.hstack(
-                            rx.text(f"Valor:",weight="bold",size="2"),
+                            rx.text(f"Valor:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('SIGNO', '')} ${State.novedad_detalle.get('VALOR', '')}",size="3"),
                         ),
                         spacing="1"

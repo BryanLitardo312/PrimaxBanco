@@ -58,6 +58,7 @@ class State(rx.State):
     upload_status: str = ""  # "success", "error"
     current_upload_id: str = ""
     
+    codigo_busqueda: str = ""
     
     novedades: list[dict] = []
     directorio: Optional[int] = None
@@ -127,7 +128,7 @@ class State(rx.State):
                 .lt("created_at", dia_siguiente.isoformat()) \
                 .execute().count or 0
             resultados += count
-            print(resultados)
+            #print(resultados)
 
         return resultados
     
@@ -148,9 +149,9 @@ class State(rx.State):
                 #"fecha": dia.strftime("%Y-%m-%d"),
                 #"cantidad": count
             #})
-            print(count)
+            #print(count)
             resultados += count
-            print(resultados)
+            #print(resultados)
 
         return resultados
             
@@ -202,10 +203,13 @@ class State(rx.State):
             #self.novedades = []
     
     @rx.event
-    def load_entries(self):
+    def load_entries(self,status_filtro: str = None):
         start = (self.page - 1) * self.limit
         end = start + self.limit - 1
-        response = supabase.table("Novedades").select("*").order("created_at", desc=True).range(start, end).execute()
+        query = supabase.table("Novedades").select("*").order("created_at", desc=True)
+        if status_filtro:
+            query = query.eq("STATUS", status_filtro)
+        response = query.range(start, end).execute()
         if response.data:
             self.novedades = response.data
         else:
@@ -240,6 +244,23 @@ class State(rx.State):
         except Exception as e:
             self.upload_status = f"Error al cerrar sesión: {str(e)}"
             print(f"Error de logout: {str(e)}")
+
+
+    @rx.event
+    def buscar_por_codigo(self, codigo: str):
+        if not codigo:
+            return
+        response = supabase.table("Novedades").select("*").ilike("SECUENCIAL", f"%{codigo}%").execute()
+        self.novedades = response.data if response.data else []
+    
+    @rx.event
+    def borrar_novedad(self, secuencial: str):
+        try:
+            supabase.table("Novedades").delete().eq("SECUENCIAL", secuencial).execute()
+            # Opcional: recargar la lista de novedades
+            self.load_entries()
+        except Exception as e:
+            print(f"Error al borrar novedad: {e}")
 
 
     @rx.event
@@ -300,31 +321,23 @@ class State(rx.State):
                     print(f"No se pudo eliminar el archivo temporal: {e}")
 
 
-class UserState(rx.State):
-    logged_in: bool = False
-
-    def logout(self):
-        self.logged_in = False
 
 class Download(rx.State):
-
+    
     async def descargar_novedades_csv(self):
-        # Obtener los datos
-        data = self.novedades if hasattr(self, 'novedades') and self.novedades else []
-        
+
+        data = self.novedades if hasattr(self, 'novedades') and self.novedades else []        
         if not data:
             response = supabase.table("Novedades").select("*").order("created_at", desc=True).execute()
             data = response.data
             if not data:
-                return rx.window_alert("No hay datos para descargar")
-
+                return
         # Crear CSV en memoria
         output = StringIO()
         writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
         writer.writeheader()
         writer.writerows(data)
         output.seek(0)
-        
         # Devolver como descarga (versión corregida)
         return rx.download(
             data=output.getvalue(),

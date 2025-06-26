@@ -115,7 +115,7 @@ def navbar():
             rx.spacer(),
             rx.box(
                 rx.text(State.email),
-                style={"fontWeight": "bold", "color": "grey"},
+                style={"fontWeight": "medium", "color": "grey"},
                 #height="100%",
                 display="flex",
                 align_items="center",
