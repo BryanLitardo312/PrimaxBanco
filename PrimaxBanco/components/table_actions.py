@@ -7,10 +7,14 @@ def filtrar_estado(value):
 def comandos () -> rx.Component:
     return rx.hstack(
             rx.input(
-                placeholder="Buscar por código secuencial",
+                rx.input.slot(
+                    rx.icon(tag="search"),
+                ),
+                placeholder="Buscar por secuencial",
                 value=State.codigo_busqueda,
                 on_change=lambda value: State.buscar_por_codigo(value),
-                width="350px",
+                width="35em",
+                height="2.5em",
             ),
             rx.spacer(),
             rx.select(

@@ -1,34 +1,6 @@
 import reflex as rx
 from ..backend.backend import State
 
-color_bg = "rgb(3, 3, 45)"
-
-"""def navbar():
-    return rx.flex(
-        rx.badge(
-            rx.icon(tag="table-2", size=28),
-            rx.heading("Customer Data App", size="6"),
-            color_scheme="green",
-            radius="large",
-            align="center",
-            variant="surface",
-            padding="0.65rem",
-        ),
-        rx.spacer(),
-        rx.hstack(
-            rx.logo(),
-            rx.color_mode.button(),
-            align="center",
-            spacing="3",
-        ),
-        spacing="2",
-        flex_direction=["column", "column", "row"],
-        align="center",
-        width="100%",
-        top="0px",
-        padding_top="2em",
-    )"""
-
 
 def navbar():
     return rx.box(
@@ -124,6 +96,117 @@ def navbar():
                 #display=["none", "none", "block"],
                 align_items="center",
             ),
+            rx.box(
+                rx.button(
+                    rx.icon(tag="log-out", size=22),
+                    color_scheme="red",
+                    variant="ghost",
+                    size="4",
+                    width="100%",
+                    on_click=State.logout,
+                ),
+                style={"fontWeight": "bold", "color": "grey"},
+                #height="100%",
+                display="flex",
+                align_items="center",
+                background_color="white",
+                border_radius="2em",
+                padding_x="1.5em",
+                height="35px",
+            ),
+            #spacing="5",
+            padding_y="0.6em",
+            #height="65px",
+            align="center",
+            width="100%",
+            #justify="between",
+
+        ),
+        width="80%",
+        background_color="black",
+        #box_shadow="0 2px 8px rgba(0,0,0,0.04)",
+        #position="sticky",
+        #top="0",
+        #z_index="100",
+        margin_top="2em",
+        margin_bottom="2em",
+        border_radius="3em",
+        padding_left="0.7em",
+        padding_right="0.7em",
+    )
+
+
+
+def navbar_mobile():
+    return rx.box(
+        rx.hstack(
+            rx.spacer(),
+            rx.hstack(
+                rx.link(
+                    rx.icon(
+                        "Home",
+                        size=25,
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.icon(
+                        "landmark",
+                        size=25,
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.icon(
+                        "truck",
+                        size=25,
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                rx.link(
+                    rx.icon(
+                        "book",
+                        size=25,
+                        style={
+                            "color": "white",
+                            "fontWeight": "medium",
+                            "transition": "all 0.2s ease-in-out",
+                            "_hover": {
+                                "transform": "scale(1.20)",
+                            },
+                        },
+                    ),
+                    href="/novedades",
+                ),
+                spacing="9",
+                justify="between",
+                width="60%",
+            ),
+            rx.spacer(),
             rx.box(
                 rx.button(
                     rx.icon(tag="log-out", size=22),

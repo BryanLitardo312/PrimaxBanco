@@ -1,6 +1,6 @@
 import reflex as rx
-from ..components.stats_cards import stats_cards_group
-from .navbar import navbar
+from ..components.stats_cards import stats_cards_group, stats_cards_group_mobile
+from .navbar import navbar,navbar_mobile
 from .table import main_table
 from ..backend.backend import Download, State
 from ..components.table_actions import comandos
@@ -8,15 +8,43 @@ from ..components.table_actions import comandos
 @rx.page(route="/novedades", title="Primax Banco", description="La organización es eficiencia")
 def Novedades() -> rx.Component:
     return rx.vstack(
-        navbar(),
-        stats_cards_group(),
+        #navbar(),
+        rx.tablet_and_desktop(
+            rx.center(
+                navbar(),
+                width="100%",
+            ),
+            width="100%",
+        ),
+        rx.mobile_only(
+            rx.center(
+                navbar_mobile(),
+                width="100%",
+            ),
+            width="100%",
+        ),
+        rx.tablet_and_desktop(
+            rx.center(
+                stats_cards_group(),
+                width="100%",
+            ),
+            width="100%",
+        ),
+        rx.mobile_only(
+            rx.center(
+                stats_cards_group_mobile(),
+                width="100%",
+            ),
+            width="100%",
+        ),
+        #stats_cards_group(),
         rx.heading(
             "Novedades bancarias",
             size="7",
             color="black",
             text_align="center",
         ),
-        rx.box(height="1.5em"),
+        rx.box(height="0.5em"),
         comandos(),
         rx.center(
             main_table(),
