@@ -17,7 +17,7 @@ def show_customer(novedad: dict):
         rx.table.cell(novedad.get("DETALLE", "")),
         rx.table.cell(novedad.get("SECUENCIAL", "")),
         rx.table.cell(f'{novedad.get("SIGNO", "")} ${novedad.get("VALOR", "")}',align='center'),
-        rx.table.cell(rx.badge(novedad.get("id", ""), color_scheme="blue",size="3"),align="center",style={"fontWeight": "bold", "size": "2em"}),
+        rx.table.cell(rx.badge(f'#{novedad.get("id", "")}', color_scheme="gray",variant="solid",size="3"),align="center",style={"fontWeight": "bold", "size": "2em"}),
         rx.table.cell(
             rx.match(
                 novedad.get("STATUS"),
@@ -36,9 +36,10 @@ def show_customer(novedad: dict):
                 rx.cond(
                     State.email == "usuario@bolivariano.com.ec",
                     rx.button(
-                        rx.icon("trash-2", size=15),
+                        rx.icon("trash-2", size=25),
                         color_scheme="red",
-                        size="2",
+                        variant="ghost",
+                        size="3",
                         on_click=lambda sec=novedad.get("SECUENCIAL", ""): State.borrar_novedad(sec),
                     ),
                     rx.box()  # No muestra nada para otros usuarios
@@ -48,7 +49,7 @@ def show_customer(novedad: dict):
                     rx.icon("circle-chevron-right",size=30),
                     #rx.icon
                     href=f"/tabla/{novedad.get("SECUENCIAL", "")}",
-                    color_scheme="blue",
+                    color_scheme="grass",
                     variant="solid",
                     #size="2",
                 ),

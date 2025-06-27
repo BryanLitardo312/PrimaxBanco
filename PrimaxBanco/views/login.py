@@ -45,7 +45,7 @@ def login():
                     size="3",
                 ),
                 rx.button(
-                    "> > >",
+                    rx.hstack(rx.text("Ingresar"),rx.icon("log-in", size=20, color="white")),
                     width="100%",
                     #color="white",
                     #background=color_button,

@@ -14,8 +14,8 @@ def detalle():
                     src="/primax_logo.png",
                     width="100px",
                     height="100px",
-                    margin_bottom="1.5em",
-                    margin_top="1em",
+                    margin_bottom="1em",
+                    margin_top="0.5em",
                 ),
                 #rx.heading(f"Soportes bancarios", size="7"),
                 # Estado de carga
@@ -109,11 +109,11 @@ def detalle():
                     )
                 ),
                 rx.button(
-                    "Enviar Soporte",
+                    rx.hstack(rx.icon("mail"), rx.text("Enviar")),
                     on_click=State.upload_to_supabase(
                         rx.upload_files(upload_id="upload1")
                     ),
-                    color_scheme="green",
+                    color_scheme="grass",
                     size="3",
                     width="90%",
                     margin_bottom="2em",
@@ -124,7 +124,8 @@ def detalle():
                 align="center",
                 justify="center",
                 width="27%",
-                padding="2em",
+                padding_x="2em",
+                padding_y="1em",
                 background="white",
                 box_shadow="0 4px 24px rgba(0,0,0,0.08)",
             ),
@@ -132,8 +133,11 @@ def detalle():
             #height="100%",
             justify="center",
             align="center",
-            padding="2.5em",
+            padding_x="2.5em",
+            padding_y="0.5em",
         ),
-        background_color=color_bg,
-        #height="100%",
+        #background_color=color_bg,
+        #class_name="bg-gradient-to-r from-pink-200 via-yellow-200 to-orange-200 p-8 rounded-lg"
+        class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",
+        height="100em",
     ),

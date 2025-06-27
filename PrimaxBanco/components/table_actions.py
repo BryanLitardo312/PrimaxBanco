@@ -1,17 +1,20 @@
 import reflex as rx
 from ..backend.backend import Download, State
 
+def filtrar_estado(value):
+    return None if value == "Todos" else value
+
 def comandos () -> rx.Component:
     return rx.hstack(
             rx.input(
                 placeholder="Buscar por código secuencial",
                 value=State.codigo_busqueda,
                 on_change=lambda value: State.buscar_por_codigo(value),
-                width="250px",
+                width="350px",
             ),
             rx.spacer(),
             rx.select(
-                ["Pendiente", "Finalizado", "Rechazado"],
+                ["Todos", "Pendiente", "Finalizado", "Rechazado"],
                 placeholder="Filtrar por estado",
                 on_change=lambda value: State.load_entries(value),
             ),
@@ -21,7 +24,7 @@ def comandos () -> rx.Component:
                     rx.text("Descargar", size="2"),
                 ),
                 on_click=Download.descargar_novedades_csv,
-                color_scheme="blue",
+                color_scheme="grass",
                 size="2",
             ),
             width="81%",

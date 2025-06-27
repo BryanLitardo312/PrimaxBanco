@@ -207,7 +207,7 @@ class State(rx.State):
         start = (self.page - 1) * self.limit
         end = start + self.limit - 1
         query = supabase.table("Novedades").select("*").order("created_at", desc=True)
-        if status_filtro:
+        if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
             query = query.eq("STATUS", status_filtro)
         response = query.range(start, end).execute()
         if response.data:
@@ -249,10 +249,12 @@ class State(rx.State):
     @rx.event
     def buscar_por_codigo(self, codigo: str):
         if not codigo:
+            self.load_entries()
             return
         response = supabase.table("Novedades").select("*").ilike("SECUENCIAL", f"%{codigo}%").execute()
         self.novedades = response.data if response.data else []
     
+
     @rx.event
     def borrar_novedad(self, secuencial: str):
         try:

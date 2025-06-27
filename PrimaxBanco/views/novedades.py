@@ -12,7 +12,7 @@ def Novedades() -> rx.Component:
         stats_cards_group(),
         rx.heading(
             "Novedades bancarias",
-            size="6",
+            size="7",
             color="black",
             text_align="center",
         ),
@@ -37,5 +37,5 @@ def Novedades() -> rx.Component:
         justify="center",
         align="center",
         #padding_x=["2.5em", "2.5em", "3em"],
-        background_color="rgb(235, 235, 235)",
+        background_color="rgb(245, 245, 245)",
     )
