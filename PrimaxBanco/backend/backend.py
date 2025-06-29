@@ -21,8 +21,8 @@ supabase: Client = create_client(url, key)
 
 
 class Novedades(rx.Model, table=True):
-    #No: int
-    #id: int = Field(default=None, primary_key=True)
+    No: int
+    id: int = Field(default=None, primary_key=True)
     FECHA: str
     REF: str
     LUGAR: str
@@ -41,15 +41,26 @@ class Novedades(rx.Model, table=True):
     COMENTARIO_RECHAZO: str
     FECHA_RECHAZO: str
 
-
+class Suministros(rx.Model, table=True):
+    requests: int = Field(default=None, primary_key=True)
+    bodega: str
+    estacion: str
+    detalle: str
+    created_at: str
+    URL_PUBLICA: str
+    COMENTARIOS: str
+    USUARIO: str
+    STATUS: str
+    COMENTARIO_RECHAZO: str
+    FECHA_RECHAZO: str
     
 
 
 
 
 class State(rx.State):
-    print(f"URL: {url}")
-    print(f"Key: {key}")
+    #print(f"URL: {url}")
+    #print(f"Key: {key}")
 
     email: str = ""
     password: str = ""    
@@ -61,10 +72,12 @@ class State(rx.State):
     codigo_busqueda: str = ""
     
     novedades: list[dict] = []
-    directorio: Optional[int] = None
+    suministros: list[dict] = []
 
 
     novedad_detalle: dict = {}
+    suministro_detalle: dict = {}
+
     cargando: bool = False
     error: str = ""
 
@@ -115,78 +128,36 @@ class State(rx.State):
         finally:
             self.cargando = False
 
-    @rx.var
-    def novedades_diarias(self) -> int:
-        hoy = datetime.utcnow().date()
-        resultados = 0
-        for i in range(7):
-            dia = hoy - timedelta(days=6 - i)
-            dia_siguiente = dia + timedelta(days=1)
-            count = supabase.table("Novedades") \
-                .select("id", count="exact") \
-                .gte("created_at", dia.isoformat()) \
-                .lt("created_at", dia_siguiente.isoformat()) \
-                .execute().count or 0
-            resultados += count
-            #print(resultados)
-
-        return resultados
-    
-    @rx.var
-    def quejas_diarias(self) -> int:
-        hoy = datetime.utcnow().date()
-        resultados = 0
-        for i in range(7):
-            dia = hoy - timedelta(days=6 - i)
-            dia_siguiente = dia + timedelta(days=1)
-            count = supabase.table("Quejas") \
-                .select("id_quejas", count="exact") \
-                .gte("created_at", dia.isoformat()) \
-                .lt("created_at", dia_siguiente.isoformat()) \
-                .execute().count or 0
+    async def cargar_suministro(self):
+        self.cargando = True
+        self.error = ""
+        self.suministro_detalle = {}
+        # Obtener el secuencial de la URL
+        request = self.router.page.params.get("secuencial", "")
+        try:
+            if not request:
+                #self.error = "No se proporcionó secuencial"
+                return
+            # Consulta a Supabase con filtro
+            response = supabase.table("Novedades")\
+                            .select("*")\
+                            .eq("SECUENCIAL", request)\
+                            .execute()
             
-            #resultados.append({
-                #"fecha": dia.strftime("%Y-%m-%d"),
-                #"cantidad": count
-            #})
-            #print(count)
-            resultados += count
-            #print(resultados)
+            if response.data:
+                self.novedad_detalle = response.data[0]
+                self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
+                self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
+                print(f"Novedad cargada: {self.novedad_detalle}")
 
-        return resultados
-            
+            else:
+                self.error = f"No se encontró novedad con secuencial {secuencial}"
 
-    @rx.var
-    def load_novedades(self) -> int:
-        directorio = supabase.table("Novedades").select("*",count="exact").execute()
-        if directorio.count is not None:
-            return directorio.count
-        return 0
+        except Exception as e:
+            self.error = f"Error al consultar: {str(e)}"
+        finally:
+            self.cargando = False
 
-    @rx.var
-    def load_novedades_pendientes(self) -> int:
-        count_null = supabase.table("Novedades").select("*", count="exact").is_("URL_PUBLICA", None).execute().count or 0
-        print(f"Count null: {count_null}")
-        return count_null
-
-    @rx.var
-    def load_suministros(self) -> int:
-        # Lógica para cargar los datos de Supabase
-        #directorio=supabase.table("Directorio_supa").select("Correo_EDS").eq("BOD", "E102").execute()
-        directorio = supabase.table("Suministros").select("*",count="exact").execute()
-        if directorio.count is not None:
-            return directorio.count
-        return 0
-
-
-    @rx.var
-    def load_quejas(self) -> int:
-        # Lógica para cargar los datos de Supabase
-        #directorio=supabase.table("Directorio_supa").select("Correo_EDS").eq("BOD", "E102").execute()
-        directorio = supabase.table("Quejas").select("*",count="exact").eq("proceso","Novedades bancarias").execute()
-        if directorio.count is not None:
-            return directorio.count
-        return 0
 
     @rx.event
     def set_page(self, new_page: int):
@@ -194,13 +165,7 @@ class State(rx.State):
             return
         self.page = new_page
         self.load_entries()
-    #@rx.event
-    #def load_entries(self):
-        #result = supabase.table("Novedades").select("*").execute()
-        #if result.data:
-            #self.novedades = [Novedades(**item).dict() for item in result.data]
-        #else:
-            #self.novedades = []
+
     
     @rx.event
     def load_entries(self,status_filtro: str = None):
@@ -214,6 +179,19 @@ class State(rx.State):
             self.novedades = response.data
         else:
             self.novedades = []
+    
+    @rx.event
+    def load_suministros(self,status_filtro: str = None):
+        start = (self.page - 1) * self.limit
+        end = start + self.limit - 1
+        query = supabase.table("Suministros").select("*").order("created_at", desc=True)
+        if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
+            query = query.eq("STATUS", status_filtro)
+        response = query.range(start, end).execute()
+        if response.data:
+            self.suministros = response.data
+        else:
+            self.suministros = []
 
     @rx.event
     def login(self, email: str, password: str):
@@ -258,16 +236,22 @@ class State(rx.State):
     @rx.event
     def borrar_novedad(self, secuencial: str):
         try:
-            supabase.table("Novedades").delete().eq("SECUENCIAL", secuencial).execute()
-            # Opcional: recargar la lista de novedades
+            supabase.table("Novedades").delete().eq("requests", secuencial).execute()
             self.load_entries()
+        except Exception as e:
+            print(f"Error al borrar novedad: {e}")
+    
+    @rx.event
+    def borrar_suministro(self, id: str):
+        try:
+            supabase.table("Suministros").delete().eq("requests", id).execute()
+            self.load_suministros()
         except Exception as e:
             print(f"Error al borrar novedad: {e}")
 
 
     @rx.event
-    async def upload_to_supabase(self, files: list[rx.UploadFile]):
-        
+    async def upload_to_supabase(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
         if files:
             #print("Atributos del archivo:", dir(files[0]))
@@ -327,7 +311,6 @@ class State(rx.State):
 class Download(rx.State):
     
     async def descargar_novedades_csv(self):
-
         data = self.novedades if hasattr(self, 'novedades') and self.novedades else []        
         if not data:
             response = supabase.table("Novedades").select("No, FECHA, REF, LUGAR, DETALLE, SECUENCIAL, SIGNO, VALOR, DESCRIPCION, STATUS, COMENTARIO_RECHAZO, FECHA_RECHAZO").order("created_at", desc=True).execute()
@@ -345,3 +328,101 @@ class Download(rx.State):
             data=output.getvalue(),
             filename="novedades.csv"
         )
+    
+
+
+class Statics (rx.State):
+    
+    @rx.var
+    def novedades_semanal(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Novedades") \
+                .select("id", count="exact") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados
+    
+    @rx.var
+    def quejas_semanal_novedades(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Quejas") \
+                .select("id_quejas", count="exact") \
+                .eq("proceso","Novedades bancarias") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados
+            
+
+    @rx.var
+    def total_novedades(self) -> int:
+        response = supabase.table("Novedades").select("id",count="exact").execute().count or 0
+        return response
+
+    @rx.var
+    def total_novedades_pendientes(self) -> int:
+        response = supabase.table("Novedades").select("id", count="exact").is_("URL_PUBLICA", None).execute().count or 0
+        return response
+
+
+    @rx.var
+    def total_quejas_novedades(self) -> int:
+        response = supabase.table("Quejas").select("id_quejas",count="exact").eq("proceso","Novedades bancarias").execute().count or 0
+        return response
+
+    @rx.var
+    def total_suministros(self) -> int:
+        response = supabase.table("Suministros").select("requests",count="exact").execute().count or 0
+        return response
+    
+    @rx.var
+    def total_suministros_pendientes(self) -> int:
+        response = supabase.table("Suministros").select("requests", count="exact").is_("URL_PUBLICA", None).execute().count or 0
+        return response
+
+    @rx.var
+    def total_quejas_suministros(self) -> int:
+        response = supabase.table("Quejas").select("id_quejas",count="exact").eq("proceso","Suministros").execute().count or 0
+        return response
+    
+    @rx.var
+    def suministros_semanal(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Suministros") \
+                .select("requests", count="exact") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados
+    
+    @rx.var
+    def quejas_semanal_suministros(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Quejas") \
+                .select("id_quejas", count="exact") \
+                .eq("proceso","Suministros") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados

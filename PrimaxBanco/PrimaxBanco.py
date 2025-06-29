@@ -2,10 +2,10 @@ import reflex as rx
 
 from .components.stats_cards_novedades import stats_cards_group
 from .views.navbar import navbar
-from .views.table import main_table
+from .views.table_novedades import main_table
 from .views.login import login
 from .views.novedades import Novedades
-from .views.detalle import detalle
+from .views.detalle_novedad import detalle
 from .views.suministros import Suministros
 
 app = rx.App(

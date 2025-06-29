@@ -3,7 +3,7 @@ from reflex.components.radix.themes.base import (
     LiteralAccentColor,
 )
 
-from ..backend.backend import State
+from ..backend.backend import Statics
 
 
 def _arrow_badge(arrow_icon: str, percentage_change: float, arrow_color: str):
@@ -210,8 +210,8 @@ def stats_cards_group() -> rx.Component:
     return rx.hstack(
         stats_card(
             "Novedades bancarias",
-            State.load_novedades,
-            State.novedades_diarias,
+            Statics.total_suministros,
+            Statics.suministros_semanal,
             "landmark",
             "blue",
             "Eventos acumulados",
@@ -219,8 +219,8 @@ def stats_cards_group() -> rx.Component:
         rx.spacer(),
         stats_card2(
             "Procesos pendientes",
-            State.load_novedades_pendientes,
-            State.novedades_diarias,
+            Statics.total_suministros_pendientes,
+            Statics.suministros_semanal,
             "notebook-pen",
             "orange",
             "Eventos acumulados",
@@ -229,8 +229,8 @@ def stats_cards_group() -> rx.Component:
         rx.spacer(),
         stats_card(
             "Retrasos y Quejas",
-            State.load_quejas,
-            State.quejas_diarias,
+            Statics.total_quejas_suministros,
+            Statics.quejas_semanal_suministros,
             "calendar-x-2",
             "ruby",
             "Eventos acumulados",
@@ -248,8 +248,8 @@ def stats_cards_group_mobile() -> rx.Component:
     return rx.vstack(
         stats_card(
             "Novedades bancarias",
-            State.load_novedades,
-            State.novedades_diarias,
+            Statics.total_suministros,
+            Statics.suministros_semanal,
             "landmark",
             "blue",
             "Eventos acumulados",
@@ -257,8 +257,8 @@ def stats_cards_group_mobile() -> rx.Component:
         #rx.spacer(),
         stats_card2(
             "Procesos pendientes",
-            State.load_novedades_pendientes,
-            State.novedades_diarias,
+            Statics.total_suministros_pendientes,
+            Statics.suministros_semanal,
             "notebook-pen",
             "orange",
             "Eventos acumulados",
@@ -267,8 +267,8 @@ def stats_cards_group_mobile() -> rx.Component:
         #rx.spacer(),
         stats_card(
             "Retrasos y Quejas",
-            State.load_quejas,
-            State.quejas_diarias,
+            Statics.total_quejas_suministros,
+            Statics.quejas_semanal_suministros,
             "calendar-x-2",
             "ruby",
             "Eventos acumulados",

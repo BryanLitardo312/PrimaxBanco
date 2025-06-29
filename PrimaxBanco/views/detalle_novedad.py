@@ -2,7 +2,7 @@ import reflex as rx
 from ..backend.backend import State
 
 color2 = "rgb(130,130,130)"
-color_bg = "rgb(235, 235, 235)"
+
 
 @rx.page(route="/tabla/[secuencial]", on_load=State.cargar_novedad)
 def detalle():

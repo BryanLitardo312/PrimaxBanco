@@ -1,7 +1,7 @@
 import reflex as rx
 from ..components.stats_cards_suministros import stats_cards_group, stats_cards_group_mobile
 from .navbar import navbar,navbar_mobile
-from .table import main_table
+from ..components.table_suministros import main_table
 from ..backend.backend import Download, State
 from ..components.table_actions import comandos
 
