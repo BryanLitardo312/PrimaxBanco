@@ -21,6 +21,10 @@ def comandos () -> rx.Component:
                 ["Todos", "Pendiente", "Finalizado", "Rechazado"],
                 placeholder="Filtrar por estado",
                 on_change=lambda value: State.load_entries(value),
+                color_scheme="gray",
+                high_contrast=True,
+                variant="soft",
+                width="20em",
             ),
             rx.button(
                 rx.hstack(
