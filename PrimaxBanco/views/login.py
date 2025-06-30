@@ -58,6 +58,16 @@ def login():
                     margin_bottom="1.5em",
                     on_click=lambda: State.login(State.email, State.password),  # Aquí iría tu lógica de login
                 ),
+                rx.cond(
+                    State.upload_status == "Credenciales incorrectas",
+                    rx.text(
+                        State.upload_status,
+                        color="red",
+                        size="2",
+                        margin_bottom="1em",
+                    ),
+                    rx.box(),
+                ),
                 rx.link(
                     rx.text(
                         "¿Olvidaste tu contraseña?",
@@ -73,11 +83,12 @@ def login():
                     rx.dialog.trigger(rx.box()),  # Se puede usar un trigger vacío si abres manualmente
                     rx.dialog.content(
                         rx.vstack(
-                            rx.text("En caso de olvidar su contraseña, por favor contacte a soporte técnico.", size="3", color=color_primary),
+                            rx.text("En caso de olvidar su contraseña, por favor contacte a soporte técnico: 0980849967", size="3", color=color_primary),
                             rx.dialog.close(
-                                rx.button(rx.hstack(rx.icon("x", size=20,color="white"), rx.text("Cerrar", size="3")),
+                                rx.button(rx.text("Comprendido", size="3"),
                                           on_click=State.close_dialog,
-                                          color_scheme="red",
+                                          color_scheme="grass",
+                                          variat="ghost",
                                           size="3",)
                             ),
                             align="center",

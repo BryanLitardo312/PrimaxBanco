@@ -66,10 +66,11 @@ class State(rx.State):
     password: str = ""    
 
     uploading: bool = False
-    upload_status: str = ""  # "success", "error"
+    upload_status: str = ""
     current_upload_id: str = ""
     
     codigo_busqueda: str = ""
+    estacion_busqueda: str = ""
     
     novedades: list[dict] = []
     suministros: list[dict] = []
@@ -214,8 +215,9 @@ class State(rx.State):
                 self.upload_status = "Credenciales incorrectas"
             
         except Exception as e:
-            self.upload_status = f"Error al iniciar sesión: {str(e)}"
-            print(f"Error de login: {str(e)}")
+            self.upload_status = "Credenciales incorrectas"
+            #self.upload_status = f"Error al iniciar sesión: {str(e)}"
+            #print(f"Error de login: {str(e)}")
 
     @rx.event
     def logout(self):
@@ -234,20 +236,20 @@ class State(rx.State):
             self.load_entries()
             return
         response = supabase.table("Novedades").select("*").ilike("SECUENCIAL", f"%{codigo}%").execute()
-        self.suministros = response.data if response.data else []
+        self.novedades = response.data if response.data else []
     
     @rx.event
     def buscar_por_estacion(self, codigo: str):
         if not codigo:
             self.load_suministros()
             return
-        response = supabase.table("Suministros").select("*").ilike("requests", f"%{codigo}%").execute()
-        self.novedades = response.data if response.data else []
+        response = supabase.table("Suministros").select("*").ilike("estacion", f"%{codigo}%").execute()
+        self.suministros = response.data if response.data else []
 
     @rx.event
     def borrar_novedad(self, secuencial: str):
         try:
-            supabase.table("Novedades").delete().eq("requests", secuencial).execute()
+            supabase.table("Novedades").delete().eq("id", secuencial).execute()
             self.load_entries()
         except Exception as e:
             print(f"Error al borrar novedad: {e}")
@@ -338,6 +340,25 @@ class Download(rx.State):
         return rx.download(
             data=output.getvalue(),
             filename="novedades.csv"
+        )
+
+    async def descargar_suministros_csv(self):
+        data = self.suministros if hasattr(self, 'suministros') and self.suministros else []        
+        if not data:
+            response = supabase.table("Suministros").select("requests, bodega, estacion, detalle, created_at, STATUS, COMENTARIO_RECHAZO, FECHA_RECHAZO").order("created_at", desc=True).execute()
+            data = response.data
+            if not data:
+                return
+        # Crear CSV en memoria
+        output = StringIO()
+        writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
+        writer.writeheader()
+        writer.writerows(data)
+        output.seek(0)
+        # Devolver como descarga (versión corregida)
+        return rx.download(
+            data=output.getvalue(),
+            filename="suministros.csv"
         )
     
 

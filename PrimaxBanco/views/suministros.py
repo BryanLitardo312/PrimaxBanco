@@ -3,7 +3,7 @@ from ..components.stats_cards_suministros import stats_cards_group, stats_cards_
 from .navbar import navbar,navbar_mobile
 from ..components.table_suministros import main_table
 from ..backend.backend import Download, State
-from ..components.table_actions import comandos
+from ..components.table_actions import comandos,comandos_suministros
 
 @rx.page(route="/suministros", title="Primax Banco", description="La organización es eficiencia")
 def Suministros() -> rx.Component:
@@ -38,14 +38,15 @@ def Suministros() -> rx.Component:
             width="100%",
         ),
         #stats_cards_group(),
+        rx.box(height="0.5em"),
         rx.heading(
             "Provisión de suministros",
             size="7",
             color="black",
             text_align="center",
         ),
-        rx.box(height="0.5em"),
-        comandos(),
+        rx.box(height="2em"),
+        comandos_suministros(),
         rx.center(
             main_table(),
             width="90%",

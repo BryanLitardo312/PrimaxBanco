@@ -38,14 +38,14 @@ def Novedades() -> rx.Component:
             ),
             width="100%",
         ),
-        rx.box(height="1em"),
+        rx.box(height="0.5em"),
         rx.heading(
             "Novedades bancarias",
             size="7",
             color="black",
             text_align="center",
         ),
-        rx.box(height="1em"),
+        rx.box(height="2em"),
         comandos(),
         rx.center(
             main_table(),

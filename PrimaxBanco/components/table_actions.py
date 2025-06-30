@@ -39,3 +39,39 @@ def comandos () -> rx.Component:
             align="center",
             #align="stretch",
         ),
+
+def comandos_suministros () -> rx.Component:
+    return rx.hstack(
+            rx.input(
+                rx.input.slot(
+                    rx.icon(tag="search"),
+                ),
+                placeholder="Buscar por estación",
+                value=State.estacion_busqueda,
+                on_change=lambda value: State.buscar_por_estacion(value),
+                width="35em",
+                height="2.5em",
+            ),
+            rx.spacer(),
+            rx.select(
+                ["Todos", "Pendiente", "Finalizado", "Rechazado"],
+                placeholder="Filtrar por estado",
+                on_change=lambda value: State.load_suministros(value),
+                color_scheme="gray",
+                high_contrast=True,
+                variant="soft",
+                width="20em",
+            ),
+            rx.button(
+                rx.hstack(
+                    rx.icon("download", size=20),
+                    rx.text("Descargar", size="2"),
+                ),
+                on_click=Download.descargar_suministros_csv,
+                color_scheme="grass",
+                size="2",
+            ),
+            width="81%",
+            align="center",
+            #align="stretch",
+        ),

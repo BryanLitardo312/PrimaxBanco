@@ -63,7 +63,7 @@ def navbar():
                             },
                         },
                     ),
-                    href="/novedades",
+                    href="/suministros",
                 ),
                 rx.link(
                     rx.text(
@@ -185,7 +185,7 @@ def navbar_mobile():
                             },
                         },
                     ),
-                    href="/novedades",
+                    href="/suministros",
                 ),
                 rx.link(
                     rx.icon(

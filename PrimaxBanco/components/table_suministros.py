@@ -23,10 +23,11 @@ def show_customer(suministro: dict):
                 rx.cond(
                     State.email == "usuario@bolivariano.com.ec",
                     rx.button(
-                        rx.icon("trash-2", size=25),
+                        rx.icon("trash-2", size=20),
                         color_scheme="red",
-                        variant="ghost",
-                        size="3",
+                        variant="solid",
+                        border_radius="3em",
+                        size="2",
                         on_click=lambda sec=suministro.get("requests", ""): State.borrar_novedad(sec),
                     ),
                     rx.box()  # No muestra nada para otros usuarios
