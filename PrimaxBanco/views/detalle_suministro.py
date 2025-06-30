@@ -1,12 +1,13 @@
 import reflex as rx
 from ..backend.backend import State
+from datetime import datetime
 
 color2 = "rgb(130,130,130)"
 
 
-@rx.page(route="/suministros/[request]", on_load=State.cargar_novedad)
-def detalle():
-    request = State.router.page.params.get("requests", "")
+@rx.page(route="/suministros/[request]", on_load=State.cargar_suministro)
+def suministrodetail():
+    request = State.router.page.params.get("request", "")
     return rx.box(
         rx.flex(
             rx.vstack(
@@ -24,35 +25,36 @@ def detalle():
                     rx.spinner()
                 ),
                 # Mensaje de error
-                rx.cond(
-                    State.error,
-                    rx.text(State.error, color="red")
-                ),
+                #rx.cond(
+                    #State.error,
+                    #rx.text(State.error, color="red")
+                #),
                 # Mostrar datos si existen
                 rx.cond(
-                    State.novedad_detalle,
+                    State.suministro_detalle,
                     rx.vstack(
                         rx.hstack(
-                            rx.text(f"Novedad:",weight="medium",size="3"),
-                            rx.text(f"{request}",size="2"),
+                            rx.text(f"Orden: #",weight="medium",size="3"),
+                            rx.text(f"{request}",size="2",),
+                            align="center",
                         ),
                         rx.hstack(
                             rx.text(f"Estación:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('BODEGA', '')}-{State.novedad_detalle.get('EESS', '')}",size="2"),
+                            rx.text(f"{State.suministro_detalle.get('bodega', '')}-{State.suministro_detalle.get('estacion', '')}",size="2"),
+                            align="center",
                         ),
                         #rx.text(f"Bodega: {State.novedad_detalle.get('BODEGA', '')}"),
                         #rx.text(f"Estación: {State.novedad_detalle.get('EESS', '')}"),
                         rx.hstack(
                             rx.text(f"Fecha:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2"),
+                            rx.text(rx.moment(State.suministro_detalle.get("created_at", ""), format="DD/MM/YYYY"),size="2"),
+                            align="center",
+                            #rx.text(f"{State.suministro_detalle.get('created_at_formateada', '')}", size="2"),
                         ),
                         rx.hstack(
                             rx.text(f"Descripción:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2"),
-                        ),
-                        rx.hstack(
-                            rx.text(f"Valor:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('SIGNO', '')} ${State.novedad_detalle.get('VALOR', '')}",size="3"),
+                            rx.text(f"{State.suministro_detalle.get('detalle', '')}",size="2"),
+                            align="center",
                         ),
                         spacing="1"
                     )

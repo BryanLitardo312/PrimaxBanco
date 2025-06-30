@@ -5,7 +5,7 @@ color2 = "rgb(130,130,130)"
 
 
 @rx.page(route="/tabla/[secuencial]", on_load=State.cargar_novedad)
-def detalle():
+def novedaddetail():
     secuencial = State.router.page.params.get("secuencial", "")
     return rx.box(
         rx.flex(

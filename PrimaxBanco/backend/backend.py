@@ -129,34 +129,37 @@ class State(rx.State):
             self.cargando = False
 
     async def cargar_suministro(self):
-        self.cargando = True
-        self.error = ""
+        #self.cargando = True
+        #self.error = ""
         self.suministro_detalle = {}
         # Obtener el secuencial de la URL
-        request = self.router.page.params.get("secuencial", "")
+        request = self.router.page.params.get("request", "")
         try:
             if not request:
                 #self.error = "No se proporcionó secuencial"
                 return
             # Consulta a Supabase con filtro
-            response = supabase.table("Novedades")\
+            response = supabase.table("Suministros")\
                             .select("*")\
-                            .eq("SECUENCIAL", request)\
+                            .eq("requests", request)\
                             .execute()
             
             if response.data:
-                self.novedad_detalle = response.data[0]
-                self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
-                self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
-                print(f"Novedad cargada: {self.novedad_detalle}")
+                self.suministro_detalle = response.data[0]
+                self.comentario = self.suministro_detalle.get("COMENTARIOS") or ""
+                self.file_url = self.suministro_detalle.get("URL_PUBLICA") or ""
+                print(f"Novedad cargada: {self.suministro_detalle}")
 
             else:
-                self.error = f"No se encontró novedad con secuencial {secuencial}"
+                self.error = f"No se encontró novedad con secuencial {request}"
 
         except Exception as e:
-            self.error = f"Error al consultar: {str(e)}"
-        finally:
-            self.cargando = False
+            print(f"Error al consultar: {str(e)}")
+            #return
+            #self.error = f"Error al consultar: {str(e)}"
+        #finally:
+            #return
+            #self.cargando = False
 
 
     @rx.event
@@ -192,6 +195,7 @@ class State(rx.State):
             self.suministros = response.data
         else:
             self.suministros = []
+
 
     @rx.event
     def login(self, email: str, password: str):
@@ -230,8 +234,15 @@ class State(rx.State):
             self.load_entries()
             return
         response = supabase.table("Novedades").select("*").ilike("SECUENCIAL", f"%{codigo}%").execute()
-        self.novedades = response.data if response.data else []
+        self.suministros = response.data if response.data else []
     
+    @rx.event
+    def buscar_por_estacion(self, codigo: str):
+        if not codigo:
+            self.load_suministros()
+            return
+        response = supabase.table("Suministros").select("*").ilike("requests", f"%{codigo}%").execute()
+        self.novedades = response.data if response.data else []
 
     @rx.event
     def borrar_novedad(self, secuencial: str):
