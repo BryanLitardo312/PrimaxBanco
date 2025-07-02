@@ -1,13 +1,12 @@
 import reflex as rx
-from ..components.stats_cards_novedades import stats_cards_group, stats_cards_group_mobile
+from ..components.stats_cards_devoluciones import stats_cards_group, stats_cards_group_mobile
 from .navbar import navbar,navbar_mobile
-#from .table_novedades import main_table
+from ..components.table_devoluciones import main_table
 from ..backend.backend import Download, State
-from ..components.table_actions import comandos
-from ..components.table_novedades import main_table
+from ..components.table_actions import comandos_devoluciones
 
-@rx.page(route="/novedades", title="Novedades | Primax", description="La organización es eficiencia")
-def Novedades() -> rx.Component:
+@rx.page(route="/devoluciones", title="Devoluciones | Primax", description="La organización es eficiencia")
+def Devoluciones() -> rx.Component:
     return rx.vstack(
         #navbar(),
         rx.tablet_and_desktop(
@@ -38,15 +37,16 @@ def Novedades() -> rx.Component:
             ),
             width="100%",
         ),
+        #stats_cards_group(),
         rx.box(height="0.5em"),
         rx.heading(
-            "Novedades bancarias",
+            "Devoluciones bancarias",
             size="7",
             color="black",
             text_align="center",
         ),
         rx.box(height="2em"),
-        comandos(),
+        comandos_devoluciones(),
         rx.center(
             main_table(),
             width="90%",

@@ -6,7 +6,7 @@ from typing import Optional,List
 
 
 def show_customer(novedad: dict):
-    valor_coment = novedad.get("COMENTARIOS","")
+    #valor_coment = novedad.get("COMENTARIOS","")
     return rx.table.row(
         #rx.table.cell(novedad.No),
         #rx.table.cell(novedad.id),
@@ -36,11 +36,12 @@ def show_customer(novedad: dict):
                 rx.cond(
                     State.email == "usuario@bolivariano.com.ec",
                     rx.button(
-                        rx.icon("trash-2", size=25),
+                        rx.icon("trash-2", size=20),
                         color_scheme="red",
-                        variant="ghost",
-                        size="3",
-                        on_click=lambda sec=novedad.get("SECUENCIAL", ""): State.borrar_novedad(sec),
+                        variant="solid",
+                        border_radius="3em",
+                        size="2",
+                        on_click=lambda sec=novedad.get("id", ""): State.borrar_devolucion(sec),
                     ),
                     rx.box()  # No muestra nada para otros usuarios
                 ),
@@ -93,11 +94,11 @@ def main_table():
                 ),
             ),
             #rx.table.body(rx.foreach(State.novedades, show_customer)),
-            rx.table.body(rx.foreach(State.novedades, show_customer)),
+            rx.table.body(rx.foreach(State.devoluciones, show_customer)),
             variant="surface",
             size="1",
             width="100%",
-            on_mount=State.load_entries,
+            on_mount=State.load_devoluciones,
         ),
         rx.hstack(
             rx.button("Anterior", on_click=State.set_page(State.page - 1), disabled=State.page == 1),

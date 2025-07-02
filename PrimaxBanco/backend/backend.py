@@ -2,14 +2,15 @@ from dotenv import load_dotenv
 import reflex as rx
 import os
 from supabase import create_client, Client
-from typing import Optional,List
+#from typing import Optional,List
 from sqlmodel import Field
 import time
 from datetime import datetime, timedelta
 import pandas as pd
-from io import BytesIO
+#from io import BytesIO
 from io import StringIO
-from starlette.responses import StreamingResponse
+#from starlette.responses import StreamingResponse
+from datetime import datetime
 import csv
 
 load_dotenv()
@@ -71,9 +72,11 @@ class State(rx.State):
     
     codigo_busqueda: str = ""
     estacion_busqueda: str = ""
+    codigo_busqueda_devoluciones: str = ""
     
     novedades: list[dict] = []
     suministros: list[dict] = []
+    devoluciones: list[dict] = []
 
 
     novedad_detalle: dict = {}
@@ -197,6 +200,18 @@ class State(rx.State):
         else:
             self.suministros = []
 
+    @rx.event
+    def load_devoluciones(self,status_filtro: str = None):
+        start = (self.page - 1) * self.limit
+        end = start + self.limit - 1
+        query = supabase.table("Devoluciones").select("*").order("created_at", desc=True)
+        if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
+            query = query.eq("STATUS", status_filtro)
+        response = query.range(start, end).execute()
+        if response.data:
+            self.devoluciones = response.data
+        else:
+            self.devoluciones = []
 
     @rx.event
     def login(self, email: str, password: str):
@@ -239,6 +254,15 @@ class State(rx.State):
         self.novedades = response.data if response.data else []
     
     @rx.event
+    def buscar_por_codigo_devoluciones(self, codigo: str):
+        if not codigo:
+            self.load_devoluciones()
+            return
+        response = supabase.table("Devoluciones").select("*").ilike("SECUENCIAL", f"%{codigo}%").execute()
+        self.devoluciones = response.data if response.data else []
+
+
+    @rx.event
     def buscar_por_estacion(self, codigo: str):
         if not codigo:
             self.load_suministros()
@@ -260,7 +284,15 @@ class State(rx.State):
             supabase.table("Suministros").delete().eq("requests", id).execute()
             self.load_suministros()
         except Exception as e:
-            print(f"Error al borrar novedad: {e}")
+            print(f"Error al borrar el suministro: {e}")
+    
+    @rx.event
+    def borrar_devolucion(self, secuencial: str):
+        try:
+            supabase.table("Devoluciones").delete().eq("id", secuencial).execute()
+            self.load_devoluciones()
+        except Exception as e:
+            print(f"Error al borrar devolucion: {e}")
 
 
     @rx.event
@@ -336,10 +368,11 @@ class Download(rx.State):
         writer.writeheader()
         writer.writerows(data)
         output.seek(0)
+        fecha_actual = datetime.now().strftime("%Y%m%d")
         # Devolver como descarga (versión corregida)
         return rx.download(
             data=output.getvalue(),
-            filename="novedades.csv"
+            filename=f"Novedades_{fecha_actual}.csv"
         )
 
     async def descargar_suministros_csv(self):
@@ -355,10 +388,31 @@ class Download(rx.State):
         writer.writeheader()
         writer.writerows(data)
         output.seek(0)
+        fecha_actual = datetime.now().strftime("%Y%m%d")
         # Devolver como descarga (versión corregida)
         return rx.download(
             data=output.getvalue(),
-            filename="suministros.csv"
+            filename=f"Suministros_{fecha_actual}.csv"
+        )
+    
+    async def descargar_devoluciones_csv(self):
+        data = self.devoluciones if hasattr(self, 'devoluciones') and self.devoluciones else []        
+        if not data:
+            response = supabase.table("Devoluciones").select("No, FECHA, REF, LUGAR, DETALLE, SECUENCIAL, SIGNO, VALOR, DESCRIPCION, STATUS, COMENTARIO_RECHAZO, FECHA_RECHAZO").order("created_at", desc=True).execute()
+            data = response.data
+            if not data:
+                return
+        # Crear CSV en memoria
+        output = StringIO()
+        writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
+        writer.writeheader()
+        writer.writerows(data)
+        output.seek(0)
+        fecha_actual = datetime.now().strftime("%Y%m%d")
+        # Devolver como descarga (versión corregida)
+        return rx.download(
+            data=output.getvalue(),
+            filename="Devoluciones_{fecha_actual}.csv"
         )
     
 
@@ -458,3 +512,52 @@ class Statics (rx.State):
                 .execute().count or 0
             resultados += count
         return resultados
+
+
+    @rx.var
+    def devoluciones_semanal(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Devoluciones") \
+                .select("id", count="exact") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados
+    
+    @rx.var
+    def quejas_semanal_devoluciones(self) -> int:
+        hoy = datetime.utcnow().date()
+        resultados = 0
+        for i in range(7):
+            dia = hoy - timedelta(days=6 - i)
+            dia_siguiente = dia + timedelta(days=1)
+            count = supabase.table("Quejas") \
+                .select("id_quejas", count="exact") \
+                .eq("proceso","Devoluciones") \
+                .gte("created_at", dia.isoformat()) \
+                .lt("created_at", dia_siguiente.isoformat()) \
+                .execute().count or 0
+            resultados += count
+        return resultados
+            
+
+    @rx.var
+    def total_devoluciones(self) -> int:
+        response = supabase.table("Devoluciones").select("id",count="exact").execute().count or 0
+        return response
+
+    @rx.var
+    def total_devoluciones_pendientes(self) -> int:
+        response = supabase.table("Devoluciones").select("id", count="exact").is_("URL_PUBLICA", None).execute().count or 0
+        return response
+
+
+    @rx.var
+    def total_quejas_devoluciones(self) -> int:
+        response = supabase.table("Quejas").select("id_quejas",count="exact").eq("proceso","Devoluciones").execute().count or 0
+        return response
