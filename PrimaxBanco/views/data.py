@@ -8,12 +8,12 @@ color2 = "rgb(130,130,130)"
 
 
 
-def line_chart_novedades_plotly():
-    return rx.center(
-        rx.plotly(data=Graphics.fig_line),
-        width="80%",
-        height="300px",
-    )
+#def line_chart_novedades_plotly():
+    #return rx.center(
+        #rx.plotly(data=Graphics.fig_line),
+        #width="80%",
+        #height="300px",
+    #)
 
 def line_chart_novedades():
     return rx.recharts.line_chart(
