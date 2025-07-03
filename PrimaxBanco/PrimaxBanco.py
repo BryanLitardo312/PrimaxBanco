@@ -9,6 +9,7 @@ from .views.detalle_suministro import suministrodetail
 from .views.detalle_devolucion import devoluciondetail
 from .views.suministros import Suministros
 from .views.devoluciones import Devoluciones
+from .views.data import data
 
 app = rx.App(
     theme=rx.theme(

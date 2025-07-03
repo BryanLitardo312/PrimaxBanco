@@ -5,7 +5,7 @@ color2 = "rgb(130,130,130)"
 
 
 @rx.page(route="/devoluciones/[secuencial]", on_load=State.cargar_novedad)
-def devoluciondetail():
+def devoluciondetail() -> rx.Component:
     secuencial = State.router.page.params.get("secuencial", "")
     return rx.box(
         rx.flex(

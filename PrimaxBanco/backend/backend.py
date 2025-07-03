@@ -12,6 +12,8 @@ from io import StringIO
 #from starlette.responses import StreamingResponse
 from datetime import datetime
 import csv
+import plotly.express as px
+import plotly.graph_objects as go
 
 load_dotenv()
 url: str = os.environ.get("SUPABASE_URL")
@@ -279,7 +281,7 @@ class State(rx.State):
             )
             if response.user:
                 self.upload_status = "Login exitoso"
-                return rx.redirect("/novedades")
+                return rx.redirect("/data")
                 # Aquí puedes guardar el usuario en el estado si lo deseas
             else:
                 self.upload_status = "Credenciales incorrectas"
@@ -348,6 +350,7 @@ class State(rx.State):
             self.load_devoluciones()
         except Exception as e:
             print(f"Error al borrar devolucion: {e}")
+
 
 
     @rx.event
@@ -616,3 +619,48 @@ class Statics (rx.State):
     def total_quejas_devoluciones(self) -> int:
         response = supabase.table("Quejas").select("id_quejas",count="exact").eq("proceso","Devoluciones").execute().count or 0
         return response
+
+class Graphics (rx.State):
+
+    novedades_line: list[dict] = []
+
+    @rx.event
+    def load_novedades_line(self):
+        response = supabase.table("Novedades").select("*").order("created_at", desc=True).execute()
+        print(response)
+        if response.data:
+            self.novedades_line = response.data
+        else:
+            self.novedades_line = []
+
+    @rx.var(cache=True)
+    def novedades_acumuladas(self) -> list[dict]:
+        self.load_novedades_line(),
+        acumulado = {}
+        for novedad in self.novedades_line:
+            fecha = novedad["FECHA"]
+            valor = novedad["VALOR"]
+            acumulado[fecha] = acumulado.get(fecha, 0) + valor
+        # Convertir a lista de dicts ordenada por fecha
+        return [
+            {"FECHA": fecha, "VALOR": valor}
+            for fecha, valor in sorted(acumulado.items())
+            ]
+
+    @rx.var
+    def fig_line(self) -> go.Figure:
+        fig=px.line(
+            self.novedades_acumuladas,
+            x="FECHA",
+            y="VALOR",
+            #title="Valores por Fecha",
+        )
+        fig.update_layout(
+        width=1000,                # ancho en píxeles
+        height=500,               # alto en píxeles
+        plot_bgcolor="#f0f4fa",   # color de fondo del área del gráfico
+        paper_bgcolor="#e0e7ef",  # color de fondo del área del papel (externo)
+        margin=dict(l=40, r=40, t=40, b=40),  # márgenes opcionales
+        )
+        return fig
+        

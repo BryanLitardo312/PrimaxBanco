@@ -6,7 +6,7 @@ color2 = "rgb(130,130,130)"
 
 
 @rx.page(route="/suministros/[request]", on_load=State.cargar_suministro)
-def suministrodetail():
+def suministrodetail() -> rx.Component:
     request = State.router.page.params.get("request", "")
     return rx.box(
         rx.flex(

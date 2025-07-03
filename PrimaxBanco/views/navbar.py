@@ -33,7 +33,7 @@ def navbar():
                             },
                         },
                     ),
-                    href="/novedades",
+                    href="/data",
                 ),
                 rx.link(
                     rx.text(
@@ -155,7 +155,7 @@ def navbar_mobile():
                             },
                         },
                     ),
-                    href="/novedades",
+                    href="/data",
                 ),
                 rx.link(
                     rx.icon(

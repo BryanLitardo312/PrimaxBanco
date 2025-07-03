@@ -72,3 +72,5 @@ wsproto==1.2.0
 yarl==1.20.0
 pandas==2.3.0
 openpyxl==3.1.5
+plotly==6.2.0
+narwhals==1.45.00
