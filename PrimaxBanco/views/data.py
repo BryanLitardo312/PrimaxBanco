@@ -21,8 +21,17 @@ def line_chart_novedades():
             data_key="VALOR",
             stroke="#8884d8",
         ),
-        rx.recharts.x_axis(data_key="FECHA"),
-        rx.recharts.y_axis(),
+        rx.recharts.cartesian_grid(
+            stroke="#cccccc",           # Color de la cuadrícula
+            stroke_dasharray="3 3",     # Patrón de guiones
+            fill="#f9f9f9",             # Color de fondo de la cuadrícula
+            fill_opacity=0.3,           # Opacidad del fondo
+        ),
+        rx.recharts.x_axis(
+            data_key="FECHA",
+            label={"value": "Fecha", "position": "bottom", "fill": "#555555"},
+        ),
+        rx.recharts.y_axis(label={"value": "Valor", "angle": -90, "position": "left", "fill": "#555555"},),
         data=Graphics.novedades_acumuladas,
         width="80%",
         height=300,
@@ -45,7 +54,7 @@ def data() -> rx.Component:
             ),
             width="100%",
         ),
-        rx.box(height="10em"),
+        rx.box(height="2em"),
         line_chart_novedades(),
         align_items="center",
     )
