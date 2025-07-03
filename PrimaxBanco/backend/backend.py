@@ -81,6 +81,7 @@ class State(rx.State):
 
     novedad_detalle: dict = {}
     suministro_detalle: dict = {}
+    devolucion_detalle: dict = {}
 
     cargando: bool = False
     error: str = ""
@@ -88,9 +89,17 @@ class State(rx.State):
     comentario: str = ""
     file_url: str = ""
 
-    page: int = 1
-    limit: int = 10
-    total: int = 0
+    page_novedades: int = 1
+    limit_novedades: int = 10
+    total_novedades: int = 0
+
+    page_suministros: int = 1
+    limit_suministros: int = 10
+    total_suministros: int = 0
+
+    page_devoluciones: int = 1
+    limit_devoluciones: int = 10
+    total_devoluciones: int = 0
 
     show_dialog: bool = False
 
@@ -165,19 +174,65 @@ class State(rx.State):
             #return
             #self.cargando = False
 
+    async def cargar_devolucion(self):
+        self.cargando = True
+        self.error = ""
+        self.devolucion_detalle = {}
+        # Obtener el secuencial de la URL
+        secuencial = self.router.page.params.get("secuencial", "")
+        #print(f"Secuencial: {secuencial}")
+        try:
+            if not secuencial:
+                self.error = "No se proporcionó secuencial"
+                return
+
+            # Consulta a Supabase con filtro
+            response = supabase.table("Devoluciones")\
+                            .select("*")\
+                            .eq("SECUENCIAL", secuencial)\
+                            .execute()
+            
+            if response.data:
+                self.novedad_detalle = response.data[0]
+                self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
+                self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
+                print(f"Novedad cargada: {self.novedad_detalle}")
+
+            else:
+                self.error = f"No se encontró novedad con secuencial {secuencial}"
+
+        except Exception as e:
+            self.error = f"Error al consultar: {str(e)}"
+        finally:
+            self.cargando = False
+
+
 
     @rx.event
-    def set_page(self, new_page: int):
+    def set_page_novedades(self, new_page: int):
         if new_page < 1:
             return
-        self.page = new_page
+        self.page_novedades = new_page
         self.load_entries()
 
+    @rx.event
+    def set_page_suministros(self, new_page: int):
+        if new_page < 1:
+            return
+        self.page_suministros = new_page
+        self.load_suministros()
+
+    @rx.event
+    def set_page_devoluciones(self, new_page: int):
+        if new_page < 1:
+            return
+        self.page_devoluciones = new_page
+        self.load_devoluciones()
     
     @rx.event
     def load_entries(self,status_filtro: str = None):
-        start = (self.page - 1) * self.limit
-        end = start + self.limit - 1
+        start = (self.page_novedades - 1) * self.limit_novedades
+        end = start + self.limit_novedades - 1
         query = supabase.table("Novedades").select("*").order("created_at", desc=True)
         if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
             query = query.eq("STATUS", status_filtro)
@@ -189,8 +244,8 @@ class State(rx.State):
     
     @rx.event
     def load_suministros(self,status_filtro: str = None):
-        start = (self.page - 1) * self.limit
-        end = start + self.limit - 1
+        start = (self.page_suministros - 1) * self.limit_suministros
+        end = start + self.limit_suministros - 1
         query = supabase.table("Suministros").select("*").order("created_at", desc=True)
         if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
             query = query.eq("STATUS", status_filtro)
@@ -202,8 +257,8 @@ class State(rx.State):
 
     @rx.event
     def load_devoluciones(self,status_filtro: str = None):
-        start = (self.page - 1) * self.limit
-        end = start + self.limit - 1
+        start = (self.page_devoluciones - 1) * self.limit_devoluciones
+        end = start + self.limit_devoluciones - 1
         query = supabase.table("Devoluciones").select("*").order("created_at", desc=True)
         if status_filtro in ["Pendiente", "Finalizado", "Rechazado"]:
             query = query.eq("STATUS", status_filtro)

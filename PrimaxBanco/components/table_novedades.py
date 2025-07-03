@@ -49,7 +49,7 @@ def show_customer(novedad: dict):
                     #rx.text("Ver más...", size="2",high_contrast=True),
                     rx.icon("circle-chevron-right",size=30),
                     #rx.icon
-                    href=f"/tabla/{novedad.get("SECUENCIAL", "")}",
+                    href=f"/novedades/{novedad.get("SECUENCIAL", "")}",
                     color_scheme="grass",
                     variant="solid",
                     #size="2",
@@ -101,9 +101,9 @@ def main_table():
             on_mount=State.load_entries,
         ),
         rx.hstack(
-            rx.button("Anterior", on_click=State.set_page(State.page - 1), disabled=State.page == 1),
-            rx.text(f"Página {State.page}"),
-            rx.button("Siguiente", on_click=State.set_page(State.page + 1)),
+            rx.button("Anterior", on_click=State.set_page_novedades(State.page_novedades - 1), disabled=State.page_novedades == 1),
+            rx.text(f"Página {State.page_novedades}"),
+            rx.button("Siguiente", on_click=State.set_page_novedades(State.page_novedades + 1)),
             justify="center",
             width="100%",
         ),

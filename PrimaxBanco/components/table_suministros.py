@@ -83,9 +83,9 @@ def main_table():
             on_mount=State.load_suministros,
         ),
         rx.hstack(
-            rx.button("Anterior", on_click=State.set_page(State.page - 1), disabled=State.page == 1),
-            rx.text(f"Página {State.page}"),
-            rx.button("Siguiente", on_click=State.set_page(State.page + 1)),
+            rx.button("Anterior", on_click=State.set_page_suministros(State.page_suministros - 1), disabled=State.page_suministros == 1),
+            rx.text(f"Página {State.page_suministros}"),
+            rx.button("Siguiente", on_click=State.set_page_suministros(State.page_suministros + 1)),
             justify="center",
             width="100%",
         ),

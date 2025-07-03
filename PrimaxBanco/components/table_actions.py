@@ -106,7 +106,6 @@ def comandos_devoluciones () -> rx.Component:
                 ),
                 on_click=Download.descargar_devoluciones_csv,
                 color_scheme="grass",
-                high_contrast=True,
                 size="2",
             ),
             width="81%",
