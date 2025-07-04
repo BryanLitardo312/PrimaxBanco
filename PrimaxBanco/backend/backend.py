@@ -647,20 +647,35 @@ class Graphics (rx.State):
             for fecha, valor in sorted(acumulado.items())
             ]
 
-    @rx.var
-    def fig_line(self) -> go.Figure:
-        fig=px.line(
-            self.novedades_acumuladas,
-            x="FECHA",
-            y="VALOR",
+    @rx.var(cache=True)
+    def novedades_acumuladas_estacion(self) -> list[dict]:
+        self.load_novedades_line(),
+        acumulado = {}
+        for novedad in self.novedades_line:
+            estacion = novedad["ESTACION"]
+            #valor = novedad["VALOR"]
+            acumulado[estacion] = acumulado.get(estacion, 0) + 1
+        # Convertir a lista de dicts ordenada por fecha
+        print({"ESTACION": estacion, "CANTIDAD": acumulado})
+        return [
+            {"ESTACION": estacion, "CANTIDAD": cantidad}
+            for estacion, cantidad in sorted(acumulado.items())
+            ]
+
+    #@rx.var
+    #def fig_line(self) -> go.Figure:
+        #fig=px.line(
+            #self.novedades_acumuladas,
+            #x="FECHA",
+            #y="VALOR",
             #title="Valores por Fecha",
-        )
-        fig.update_layout(
-        width=1000,                # ancho en píxeles
-        height=500,               # alto en píxeles
-        plot_bgcolor="#f0f4fa",   # color de fondo del área del gráfico
-        paper_bgcolor="#e0e7ef",  # color de fondo del área del papel (externo)
-        margin=dict(l=40, r=40, t=40, b=40),  # márgenes opcionales
-        )
-        return fig
+        #)
+        #fig.update_layout(
+        #width=1000,                # ancho en píxeles
+        #height=500,               # alto en píxeles
+        #plot_bgcolor="#f0f4fa",   # color de fondo del área del gráfico
+        #paper_bgcolor="#e0e7ef",  # color de fondo del área del papel (externo)
+        #margin=dict(l=40, r=40, t=40, b=40),  # márgenes opcionales
+        #)
+        #return fig
         

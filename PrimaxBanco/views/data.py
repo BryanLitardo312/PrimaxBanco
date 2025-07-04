@@ -37,6 +37,20 @@ def line_chart_novedades():
         height=300,
     )
 
+def bar_tres_barras():
+    return rx.recharts.bar_chart(
+        rx.recharts.bar(
+            data_key="CANTIDAD",
+            stroke=rx.color("accent", 9),
+            fill=rx.color("accent", 8),
+        ),
+        rx.recharts.x_axis(data_key="ESTACION"),
+        rx.recharts.y_axis(),
+        data=Graphics.novedades_acumuladas_estacion,  # data debe ser una lista de diccionarios con las claves "uv", "pv" y "amt"
+        width="80%",
+        height=250,
+    )
+
 @rx.page(route="/data",title="Data | Primax",description="Data en Primax Banco")
 def data() -> rx.Component:
     return rx.vstack(
@@ -56,5 +70,6 @@ def data() -> rx.Component:
         ),
         rx.box(height="2em"),
         line_chart_novedades(),
+        bar_tres_barras(),
         align_items="center",
     )
