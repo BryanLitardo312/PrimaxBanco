@@ -40,11 +40,17 @@ def line_chart_novedades():
 def bar_tres_barras():
     return rx.recharts.bar_chart(
         rx.recharts.bar(
-            data_key="CANTIDAD",
+            data_key="ACUMULADO",
             stroke=rx.color("accent", 9),
             fill=rx.color("accent", 8),
         ),
-        rx.recharts.x_axis(data_key="ESTACION"),
+        rx.recharts.x_axis(data_key="ESTACION",
+            tick={
+            "angle": -90,
+            "text_anchor": "start",
+            #"dy": 10
+            }
+        ),
         rx.recharts.y_axis(),
         data=Graphics.novedades_acumuladas_estacion,  # data debe ser una lista de diccionarios con las claves "uv", "pv" y "amt"
         width="80%",

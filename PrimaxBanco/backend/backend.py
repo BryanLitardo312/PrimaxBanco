@@ -627,7 +627,6 @@ class Graphics (rx.State):
     @rx.event
     def load_novedades_line(self):
         response = supabase.table("Novedades").select("*").order("created_at", desc=True).execute()
-        print(response)
         if response.data:
             self.novedades_line = response.data
         else:
@@ -652,14 +651,13 @@ class Graphics (rx.State):
         self.load_novedades_line(),
         acumulado = {}
         for novedad in self.novedades_line:
-            estacion = novedad["ESTACION"]
+            estacion = novedad.get("EESS")
             #valor = novedad["VALOR"]
             acumulado[estacion] = acumulado.get(estacion, 0) + 1
         # Convertir a lista de dicts ordenada por fecha
-        print({"ESTACION": estacion, "CANTIDAD": acumulado})
         return [
-            {"ESTACION": estacion, "CANTIDAD": cantidad}
-            for estacion, cantidad in sorted(acumulado.items())
+            {"ESTACION": estacion, "ACUMULADO": acumulado}
+            for estacion, acumulado in sorted(acumulado.items())
             ]
 
     #@rx.var
