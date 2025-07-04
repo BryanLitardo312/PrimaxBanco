@@ -29,27 +29,37 @@ def line_chart_novedades():
         ),
         rx.recharts.x_axis(
             data_key="FECHA",
-            label={"value": "Fecha", "position": "bottom", "fill": "#555555"},
+            #tick={
+            #"angle": -90,
+            #"text_anchor": "end",
+            #"dy": 50
+            #},
+            height=50,
+            #label={"value": "Fecha", "position": "bottom", "fill": "#555555"},
         ),
-        rx.recharts.y_axis(label={"value": "Valor", "angle": -90, "position": "left", "fill": "#555555"},),
+        rx.recharts.y_axis(),
         data=Graphics.novedades_acumuladas,
         width="80%",
-        height=300,
+        height=320,
     )
 
 def bar_tres_barras():
     return rx.recharts.bar_chart(
         rx.recharts.bar(
-            data_key="ACUMULADO",
+            data_key="Acumulado",
             stroke=rx.color("accent", 9),
             fill=rx.color("accent", 8),
         ),
-        rx.recharts.x_axis(data_key="ESTACION",
-            tick={
-            "angle": -90,
-            "text_anchor": "start",
-            #"dy": 10
-            }
+        rx.recharts.x_axis(
+            data_key="ESTACION",
+            hide=True,
+        ),
+        rx.recharts.graphing_tooltip(
+            content_style={
+                "backgroundColor": rx.color("accent", 4),
+                "borderRadius": "4px",
+                "padding": "8px",
+            },
         ),
         rx.recharts.y_axis(),
         data=Graphics.novedades_acumuladas_estacion,  # data debe ser una lista de diccionarios con las claves "uv", "pv" y "amt"
@@ -59,23 +69,30 @@ def bar_tres_barras():
 
 @rx.page(route="/data",title="Data | Primax",description="Data en Primax Banco")
 def data() -> rx.Component:
-    return rx.vstack(
-        rx.tablet_and_desktop(
-            rx.center(
-                navbar(),
-                width="100%",
+        return rx.box(
+            rx.vstack(
+                rx.tablet_and_desktop(
+                    rx.center(
+                        navbar(),
+                        width="100%",
+                    ),
+                    width="100%",
+                ),
+                rx.mobile_only(
+                    rx.center(
+                        navbar_mobile(),
+                        width="100%",
+                    ),
+                    width="100%",
+                ),
+                #rx.box(height="1em"),
+                line_chart_novedades(),
+                #rx.box(height="1em"),
+                bar_tres_barras(),
+                rx.box(height="2em"),
+                spacing="3",
+                align_items="center",
             ),
-            width="100%",
+            width="100vw",
+            height="100vh",
         ),
-        rx.mobile_only(
-            rx.center(
-                navbar_mobile(),
-                width="100%",
-            ),
-            width="100%",
-        ),
-        rx.box(height="2em"),
-        line_chart_novedades(),
-        bar_tres_barras(),
-        align_items="center",
-    )

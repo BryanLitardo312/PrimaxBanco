@@ -637,7 +637,7 @@ class Graphics (rx.State):
         self.load_novedades_line(),
         acumulado = {}
         for novedad in self.novedades_line:
-            fecha = novedad["FECHA"]
+            fecha = novedad["FECHA"][0:5]
             valor = novedad["VALOR"]
             acumulado[fecha] = acumulado.get(fecha, 0) + valor
         # Convertir a lista de dicts ordenada por fecha
@@ -656,7 +656,7 @@ class Graphics (rx.State):
             acumulado[estacion] = acumulado.get(estacion, 0) + 1
         # Convertir a lista de dicts ordenada por fecha
         return [
-            {"ESTACION": estacion, "ACUMULADO": acumulado}
+            {"ESTACION": estacion, "Acumulado": acumulado}
             for estacion, acumulado in sorted(acumulado.items())
             ]
 

@@ -83,13 +83,14 @@ def login():
                     rx.dialog.trigger(rx.box()),  # Se puede usar un trigger vacío si abres manualmente
                     rx.dialog.content(
                         rx.vstack(
-                            rx.text("En caso de olvidar su contraseña, por favor contacte a soporte técnico: 0980849967", size="3", color=color_primary),
+                            rx.text("Por favor, contacte a Soporte técnico: +593 980849967", size="3", color=color_primary),
                             rx.dialog.close(
-                                rx.button(rx.text("Comprendido", size="3"),
-                                          on_click=State.close_dialog,
-                                          color_scheme="grass",
-                                          variat="ghost",
-                                          size="3",)
+                                rx.link(rx.text("Comprendido", size="3"),on_click=State.close_dialog)
+                                #rx.button(rx.text("Comprendido", size="3"),
+                                          #on_click=State.close_dialog,
+                                          #color_scheme="grass",
+                                          #variat="ghost",
+                                          #size="3",)
                             ),
                             align="center",
                         ),
