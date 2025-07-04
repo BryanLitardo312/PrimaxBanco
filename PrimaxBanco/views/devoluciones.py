@@ -45,7 +45,7 @@ def Devoluciones() -> rx.Component:
             color="black",
             text_align="center",
         ),
-        rx.box(height="2em"),
+        rx.box(height="1em"),
         comandos_devoluciones(),
         rx.center(
             main_table(),

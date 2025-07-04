@@ -45,7 +45,7 @@ def Novedades() -> rx.Component:
             color="black",
             text_align="center",
         ),
-        rx.box(height="2em"),
+        rx.box(height="1em"),
         comandos(),
         rx.center(
             main_table(),
