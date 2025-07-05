@@ -622,7 +622,18 @@ class Statics (rx.State):
 
 class Graphics (rx.State):
 
+    value_novedades: bool = False
+    value_suministros: bool = False
     novedades_line: list[dict] = []
+    suministros_line: list[dict] = []
+
+    @rx.event
+    def set_novedades(self, value: bool):
+        self.value_novedades = value
+    
+    @rx.event
+    def set_suministros(self, value: bool):
+        self.value_suministros = value
 
     @rx.event
     def load_novedades_line(self):
@@ -631,6 +642,14 @@ class Graphics (rx.State):
             self.novedades_line = response.data
         else:
             self.novedades_line = []
+    
+    @rx.event
+    def load_suministros_line(self):
+        response = supabase.table("Suministros").select("*").order("created_at", desc=True).execute()
+        if response.data:
+            self.suministros_line = response.data
+        else:
+            self.suministros_line = []
 
     @rx.var(cache=True)
     def novedades_acumuladas(self) -> list[dict]:
@@ -647,6 +666,35 @@ class Graphics (rx.State):
             ]
 
     @rx.var(cache=True)
+    def novedades_acumuladas_casos(self) -> list[dict]:
+        self.load_novedades_line(),
+        acumulado = {}
+        for novedad in self.novedades_line:
+            fecha = novedad["FECHA"][0:5]
+            #valor = novedad["VALOR"]
+            acumulado[fecha] = acumulado.get(fecha, 0) + 1
+        # Convertir a lista de dicts ordenada por fecha
+        return [
+            {"Fecha": fecha, "Acumulado": acumulado}
+            for fecha, acumulado in sorted(acumulado.items())
+            ]
+    
+    @rx.var(cache=True)
+    def suministros_acumulados(self) -> list[dict]:
+        self.load_suministros_line(),
+        acumulado = {}
+        for suministro in self.suministros_line:
+            fecha_original = suministro.get("created_at")
+            fecha_original = datetime.fromisoformat(fecha_original.replace("Z", "+00:00"))
+            fecha = fecha_original.strftime("%d/%m/%Y")
+            acumulado[fecha] = acumulado.get(fecha, 0) + 1
+        # Convertir a lista de dicts ordenada por fecha
+        return [
+            {"Fecha": fecha, "Acumulado": acumulado}
+            for fecha, acumulado in sorted(acumulado.items())
+            ]
+
+    @rx.var(cache=True)
     def novedades_acumuladas_estacion(self) -> list[dict]:
         self.load_novedades_line(),
         acumulado = {}
@@ -656,24 +704,21 @@ class Graphics (rx.State):
             acumulado[estacion] = acumulado.get(estacion, 0) + 1
         # Convertir a lista de dicts ordenada por fecha
         return [
-            {"ESTACION": estacion, "Acumulado": acumulado}
+            {"Estacion": estacion, "Total": acumulado}
             for estacion, acumulado in sorted(acumulado.items())
             ]
 
-    #@rx.var
-    #def fig_line(self) -> go.Figure:
-        #fig=px.line(
-            #self.novedades_acumuladas,
-            #x="FECHA",
-            #y="VALOR",
-            #title="Valores por Fecha",
-        #)
-        #fig.update_layout(
-        #width=1000,                # ancho en píxeles
-        #height=500,               # alto en píxeles
-        #plot_bgcolor="#f0f4fa",   # color de fondo del área del gráfico
-        #paper_bgcolor="#e0e7ef",  # color de fondo del área del papel (externo)
-        #margin=dict(l=40, r=40, t=40, b=40),  # márgenes opcionales
-        #)
-        #return fig
-        
+    @rx.var(cache=True)
+    def suministros_acumulados_estacion(self) -> list[dict]:
+        self.load_suministros_line(),
+        acumulado = {}
+        for novedad in self.suministros_line:
+            estacion = novedad.get("estacion")
+            #valor = novedad["VALOR"]
+            acumulado[estacion] = acumulado.get(estacion, 0) + 1
+        # Convertir a lista de dicts ordenada por fecha
+        return [
+            {"Estacion": estacion, "Total": acumulado}
+            for estacion, acumulado in sorted(acumulado.items())
+            ]
+

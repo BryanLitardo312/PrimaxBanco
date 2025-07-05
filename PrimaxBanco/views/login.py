@@ -85,7 +85,7 @@ def login():
                         rx.vstack(
                             rx.text("Por favor, contacte a Soporte técnico: +593 980849967", size="3", color=color_primary),
                             rx.dialog.close(
-                                rx.link(rx.text("Comprendido", size="3"),on_click=State.close_dialog)
+                                rx.link(rx.text("Cerrar", size="3"), color_scheme="red",on_click=State.close_dialog)
                                 #rx.button(rx.text("Comprendido", size="3"),
                                           #on_click=State.close_dialog,
                                           #color_scheme="grass",
