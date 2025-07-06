@@ -114,14 +114,14 @@ class State(rx.State):
     async def cargar_novedad(self):
         self.cargando = True
         self.error = ""
-        self.novedad_detalle = {}
+        #self.novedad_detalle = {}
         # Obtener el secuencial de la URL
         secuencial = self.router.page.params.get("secuencial", "")
         #print(f"Secuencial: {secuencial}")
         try:
-            if not secuencial:
-                self.error = "No se proporcionó secuencial"
-                return
+            #if not secuencial:
+                #self.error = "No se proporcionó secuencial"
+                #return
 
             # Consulta a Supabase con filtro
             response = supabase.table("Novedades")\
@@ -133,7 +133,7 @@ class State(rx.State):
                 self.novedad_detalle = response.data[0]
                 self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
-                print(f"Novedad cargada: {self.novedad_detalle}")
+                #print(f"Novedad cargada: {self.novedad_detalle}")
 
             else:
                 self.error = f"No se encontró novedad con secuencial {secuencial}"
@@ -195,10 +195,10 @@ class State(rx.State):
                             .execute()
             
             if response.data:
-                self.novedad_detalle = response.data[0]
-                self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
-                self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
-                print(f"Novedad cargada: {self.novedad_detalle}")
+                self.devolucion_detalle = response.data[0]
+                self.comentario = self.devolucion_detalle.get("COMENTARIOS") or ""
+                self.file_url = self.devolucion_detalle.get("URL_PUBLICA") or ""
+                print(f"Novedad cargada: {self.devolucion_detalle}")
 
             else:
                 self.error = f"No se encontró novedad con secuencial {secuencial}"
@@ -354,24 +354,22 @@ class State(rx.State):
 
 
     @rx.event
-    async def upload_to_supabase(self, files: list[rx.UploadFile]):   
+    async def upload_to_supabase_novedades(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
-        if files:
+        #if files:
             #print("Atributos del archivo:", dir(files[0]))
-            print("Archivo:", files[0].name)
+            #print("Archivo:", files[0].name)
         
         if not files:
             self.upload_status = "No se seleccionó ningún archivo"
             return
 
         file = files[0]
-
         if hasattr(file, "read"):
             data_bytes = await file.read()
         else:
             data_bytes = file
 
-        #file_name = file.name
         file_name = f"{secuencial}.pdf"
         temp_dir = "./temp_files"
         os.makedirs(temp_dir, exist_ok=True)
@@ -383,7 +381,7 @@ class State(rx.State):
 
             with open(temp_file_path, "rb") as temp_file:
                 response = supabase.storage.from_("soportes").upload(
-                    file_name, temp_file, {"content-type": "application/pdf"}
+                    f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}
                 )
 
             public_url = supabase.storage.from_("soportes").get_public_url(file_name)
@@ -394,6 +392,8 @@ class State(rx.State):
             actualizacion = supabase.table("Novedades").update({
                 "COMENTARIOS": self.comentario,
                 "URL_PUBLICA": self.file_url,
+                "USUARIO" : self.email,
+                "STATUS" : "Finalizado"
             }).eq("SECUENCIAL", secuencial).execute()
             self.comentario = ""
             self.file_url = ""
@@ -619,6 +619,7 @@ class Statics (rx.State):
     def total_quejas_devoluciones(self) -> int:
         response = supabase.table("Quejas").select("id_quejas",count="exact").eq("proceso","Devoluciones").execute().count or 0
         return response
+
 
 class Graphics (rx.State):
 

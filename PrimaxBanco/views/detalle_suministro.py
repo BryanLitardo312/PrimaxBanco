@@ -18,18 +18,10 @@ def suministrodetail() -> rx.Component:
                     margin_bottom="1em",
                     #margin_top="0.5em",
                 ),
-                #rx.heading(f"Soportes bancarios", size="7"),
-                # Estado de carga
                 rx.cond(
                     State.cargando,
                     rx.spinner()
                 ),
-                # Mensaje de error
-                #rx.cond(
-                    #State.error,
-                    #rx.text(State.error, color="red")
-                #),
-                # Mostrar datos si existen
                 rx.cond(
                     State.suministro_detalle,
                     rx.vstack(
@@ -43,8 +35,6 @@ def suministrodetail() -> rx.Component:
                             rx.text(f"{State.suministro_detalle.get('bodega', '')}-{State.suministro_detalle.get('estacion', '')}",size="2"),
                             align="center",
                         ),
-                        #rx.text(f"Bodega: {State.novedad_detalle.get('BODEGA', '')}"),
-                        #rx.text(f"Estación: {State.novedad_detalle.get('EESS', '')}"),
                         rx.hstack(
                             rx.text(f"Fecha:",weight="medium",size="3"),
                             rx.text(rx.moment(State.suministro_detalle.get("created_at", ""), format="DD/MM/YYYY"),size="2"),
@@ -112,7 +102,7 @@ def suministrodetail() -> rx.Component:
                 ),
                 rx.button(
                     rx.hstack(rx.icon("mail"), rx.text("Enviar")),
-                    on_click=State.upload_to_supabase(
+                    on_click=State.upload_to_supabase_novedades(
                         rx.upload_files(upload_id="upload1")
                     ),
                     color_scheme="grass",

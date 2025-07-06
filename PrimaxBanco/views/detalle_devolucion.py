@@ -110,7 +110,7 @@ def devoluciondetail() -> rx.Component:
                 ),
                 rx.button(
                     rx.hstack(rx.icon("mail"), rx.text("Enviar")),
-                    on_click=State.upload_to_supabase(
+                    on_click=State.upload_to_supabase_novedades(
                         rx.upload_files(upload_id="upload1")
                     ),
                     color_scheme="grass",

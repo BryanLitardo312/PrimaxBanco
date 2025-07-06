@@ -40,8 +40,6 @@ def novedaddetail() -> rx.Component:
                             rx.text(f"Estación:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('BODEGA', '')}-{State.novedad_detalle.get('EESS', '')}",size="2"),
                         ),
-                        #rx.text(f"Bodega: {State.novedad_detalle.get('BODEGA', '')}"),
-                        #rx.text(f"Estación: {State.novedad_detalle.get('EESS', '')}"),
                         rx.hstack(
                             rx.text(f"Fecha:",weight="medium",size="3"),
                             rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2"),
@@ -68,39 +66,66 @@ def novedaddetail() -> rx.Component:
                         border_radius="10px 10px",
                         max_length=200,
                         required=True,
-                        #style={"border-color" : "black",
-                               #"border" : f"1px dotted {color2}"},
                         border=f"2px solid {color2}",
                         height="100%",
                         size="3",
+                        style={
+                            "& textarea": {
+                                "color": "blue"
+                            }
+                        }
                     ),
                     width="90%",
                     #height="30%",
                 ),
                 rx.box(
-                    rx.upload(
-                        rx.vstack(
-                            rx.icon(
-                                tag="files",
-                                size=35,
-                                color="grey",
+                    rx.cond(
+                        State.comentario == "",
+                        rx.upload(
+                            rx.vstack(
+                                rx.icon(
+                                    tag="files",
+                                    size=45,
+                                    #color="grey",
+                                    color=rx.color("gray",11),
+                                ),
+                                justify="center",
+                                align="center",
+                                height="100%",
                             ),
-                            justify="center",
-                            align="center",
+                            id="upload1",
+                            bg="#f0f0f0",
+                            border=f"2px solid {color2}",
+                            border_radius="10px 10px",
+                            padding="1.3em",
                             height="100%",
+                            accept={
+                                "application/pdf": [".pdf"],
+                            },
                         ),
-                        id="upload1",
-                        border=f"2px solid {color2}",
-                        border_radius="10px 10px",
-                        padding="1.3em",
-                        height="100%",
-                        accept={
-                            "application/pdf": [".pdf"],
-                        },
-                        #style={"border-color" : "black",
-                               #"border" : f"1px dotted {color2}"},
+                        rx.upload(
+                            rx.vstack(
+                                rx.icon(
+                                    tag="files",
+                                    size=25,
+                                    color=rx.color("gray",11),
+                                ),
+                                rx.text('Documento cargado'),
+                                justify="center",
+                                align="center",
+                                height="100%",
+                            ),
+                            id="upload1",
+                            bg="#f0f0f0",
+                            border=f"2px solid {color2}",
+                            border_radius="10px 10px",
+                            padding="1.3em",
+                            height="100%",
+                            accept={
+                                "application/pdf": [".pdf"],
+                            },
+                        ),
                     ),
-                    #height="50px",
                     width="90%",
                 ),
                 rx.hstack(
@@ -109,8 +134,8 @@ def novedaddetail() -> rx.Component:
                     )
                 ),
                 rx.button(
-                    rx.hstack(rx.icon("mail"), rx.text("Enviar")),
-                    on_click=State.upload_to_supabase(
+                    rx.hstack(rx.text("Actualizar"), rx.icon("recycle")),
+                    on_click=State.upload_to_supabase_novedades(
                         rx.upload_files(upload_id="upload1")
                     ),
                     color_scheme="grass",
@@ -135,10 +160,11 @@ def novedaddetail() -> rx.Component:
             justify="center",
             align="center",
             padding_x="2.5em",
-            #padding_y="1em",
+            padding_top="2em",
         ),
         height="100vh",
         #background_color=color_bg,
         #class_name="bg-gradient-to-r from-pink-200 via-yellow-200 to-orange-200 p-8 rounded-lg"
-        class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",
+        background="linear-gradient(to right, #f3f4f6, #d1d5db, #6b7280)",
+        #class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",
     ),
