@@ -68,9 +68,9 @@ class State(rx.State):
     email: str = ""
     password: str = ""    
 
-    uploading: bool = False
+
     upload_status: str = ""
-    current_upload_id: str = ""
+    upload_status_sesion: str = ""
     
     codigo_busqueda: str = ""
     estacion_busqueda: str = ""
@@ -89,7 +89,9 @@ class State(rx.State):
     error: str = ""
 
     comentario: str = ""
+    comentario_historial: str = ""
     file_url: str = ""
+    comentario_rechazo: str = ""
 
     page_novedades: int = 1
     limit_novedades: int = 10
@@ -119,11 +121,6 @@ class State(rx.State):
         secuencial = self.router.page.params.get("secuencial", "")
         #print(f"Secuencial: {secuencial}")
         try:
-            #if not secuencial:
-                #self.error = "No se proporcionó secuencial"
-                #return
-
-            # Consulta a Supabase con filtro
             response = supabase.table("Novedades")\
                             .select("*")\
                             .eq("SECUENCIAL", secuencial)\
@@ -131,8 +128,9 @@ class State(rx.State):
             
             if response.data:
                 self.novedad_detalle = response.data[0]
-                self.comentario = self.novedad_detalle.get("COMENTARIOS") or ""
+                self.comentario_historial = self.novedad_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.novedad_detalle.get("URL_PUBLICA") or ""
+                self.comentario_rechazo = self.novedad_detalle.get("COMENTARIO_RECHAZO") or ""
                 #print(f"Novedad cargada: {self.novedad_detalle}")
 
             else:
@@ -144,8 +142,6 @@ class State(rx.State):
             self.cargando = False
 
     async def cargar_suministro(self):
-        #self.cargando = True
-        #self.error = ""
         self.suministro_detalle = {}
         # Obtener el secuencial de la URL
         request = self.router.page.params.get("request", "")
@@ -163,18 +159,17 @@ class State(rx.State):
                 self.suministro_detalle = response.data[0]
                 self.comentario = self.suministro_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.suministro_detalle.get("URL_PUBLICA") or ""
-                print(f"Novedad cargada: {self.suministro_detalle}")
+                self.comentario_rechazo = self.suministro_detalle.get("COMENTARIO_RECHAZO") or ""
+                #print(f"Novedad cargada: {self.suministro_detalle}")
 
             else:
                 self.error = f"No se encontró novedad con secuencial {request}"
 
         except Exception as e:
             print(f"Error al consultar: {str(e)}")
-            #return
-            #self.error = f"Error al consultar: {str(e)}"
-        #finally:
-            #return
-            #self.cargando = False
+            self.error = f"Error al consultar: {str(e)}"
+        finally:
+            self.cargando = False
 
     async def cargar_devolucion(self):
         self.cargando = True
@@ -198,7 +193,8 @@ class State(rx.State):
                 self.devolucion_detalle = response.data[0]
                 self.comentario = self.devolucion_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.devolucion_detalle.get("URL_PUBLICA") or ""
-                print(f"Novedad cargada: {self.devolucion_detalle}")
+                self.comentario_rechazo = self.devolucion_detalle.get("COMENTARIO_RECHAZO") or ""
+                #print(f"Novedad cargada: {self.devolucion_detalle}")
 
             else:
                 self.error = f"No se encontró novedad con secuencial {secuencial}"
@@ -280,14 +276,14 @@ class State(rx.State):
                 }
             )
             if response.user:
-                self.upload_status = "Login exitoso"
+                self.upload_status_sesion = "Login exitoso"
                 return rx.redirect("/data")
                 # Aquí puedes guardar el usuario en el estado si lo deseas
             else:
-                self.upload_status = "Credenciales incorrectas"
+                self.upload_status_sesion = "Credenciales incorrectas"
             
         except Exception as e:
-            self.upload_status = "Credenciales incorrectas"
+            self.upload_status_sesion = "Credenciales incorrectas"
             #self.upload_status = f"Error al iniciar sesión: {str(e)}"
             #print(f"Error de login: {str(e)}")
 
@@ -295,10 +291,10 @@ class State(rx.State):
     def logout(self):
         try:
             supabase.auth.sign_out()  # No asumas que retorna algo
-            self.upload_status = "Sesión cerrada exitosamente"
+            self.upload_status_sesion = "Sesión cerrada exitosamente"
             return rx.redirect("/")
         except Exception as e:
-            self.upload_status = f"Error al cerrar sesión: {str(e)}"
+            self.upload_status_sesion = f"Error al cerrar sesión: {str(e)}"
             print(f"Error de logout: {str(e)}")
 
 
@@ -361,7 +357,7 @@ class State(rx.State):
             #print("Archivo:", files[0].name)
         
         if not files:
-            self.upload_status = "No se seleccionó ningún archivo"
+            self.upload_status = "¡No hay archivo seleccionado!"
             return
 
         file = files[0]
@@ -381,13 +377,13 @@ class State(rx.State):
 
             with open(temp_file_path, "rb") as temp_file:
                 response = supabase.storage.from_("soportes").upload(
-                    f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}
+                    f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
                 )
 
-            public_url = supabase.storage.from_("soportes").get_public_url(file_name)
-            print(f"Archivo cargado exitosamente: {public_url}")
+            public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/file_name")
+            #print(f"Archivo cargado exitosamente: {public_url}")
             self.file_url = public_url
-            self.upload_status = "success"
+            self.upload_status = "¡Archivo cargado!"
 
             actualizacion = supabase.table("Novedades").update({
                 "COMENTARIOS": self.comentario,
@@ -397,10 +393,11 @@ class State(rx.State):
             }).eq("SECUENCIAL", secuencial).execute()
             self.comentario = ""
             self.file_url = ""
+            return rx.redirect("/novedades")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
-            self.upload_status = "error"
+            self.upload_status = "Error en la carga"
 
         finally:
             if temp_file_path and os.path.exists(temp_file_path):

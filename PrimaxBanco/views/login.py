@@ -59,9 +59,9 @@ def login():
                     on_click=lambda: State.login(State.email, State.password),  # Aquí iría tu lógica de login
                 ),
                 rx.cond(
-                    State.upload_status == "Credenciales incorrectas",
+                    State.upload_status_sesion == "Credenciales incorrectas",
                     rx.text(
-                        State.upload_status,
+                        State.upload_status_sesion,
                         color="red",
                         size="2",
                         margin_bottom="1em",

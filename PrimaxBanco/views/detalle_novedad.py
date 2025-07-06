@@ -2,7 +2,7 @@ import reflex as rx
 from ..backend.backend import State
 
 color2 = "rgb(130,130,130)"
-
+color3 = "#7d0909"
 
 @rx.page(route="/novedades/[secuencial]", on_load=State.cargar_novedad)
 def novedaddetail() -> rx.Component:
@@ -17,8 +17,6 @@ def novedaddetail() -> rx.Component:
                     margin_bottom="1em",
                     #margin_top="0.5em",
                 ),
-                #rx.heading(f"Soportes bancarios", size="7"),
-                # Estado de carga
                 rx.cond(
                     State.cargando,
                     rx.spinner()
@@ -28,63 +26,100 @@ def novedaddetail() -> rx.Component:
                     State.error,
                     rx.text(State.error, color="red")
                 ),
-                # Mostrar datos si existen
-                rx.cond(
-                    State.novedad_detalle,
-                    rx.vstack(
-                        rx.hstack(
-                            rx.text(f"Novedad:",weight="medium",size="3"),
-                            rx.text(f"{secuencial}",size="2"),
-                        ),
-                        rx.hstack(
-                            rx.text(f"Estación:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('BODEGA', '')}-{State.novedad_detalle.get('EESS', '')}",size="2"),
-                        ),
-                        rx.hstack(
-                            rx.text(f"Fecha:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2"),
-                        ),
-                        rx.hstack(
-                            rx.text(f"Descripción:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2"),
-                        ),
-                        rx.hstack(
-                            rx.text(f"Valor:",weight="medium",size="3"),
-                            rx.text(f"{State.novedad_detalle.get('SIGNO', '')} ${State.novedad_detalle.get('VALOR', '')}",size="3"),
-                        ),
-                        spacing="1"
-                    )
-                ),
-                rx.box(height="1em"),
                 rx.box(
-                    rx.text_area(
-                        placeholder="Ingrese sus comentarios...",
-                        value=State.comentario,
-                        on_change=State.set_comentario,
-                        #on_blur=TextAreaBlur.set_text,
-                        #radius="large",
-                        border_radius="10px 10px",
-                        max_length=200,
-                        required=True,
-                        border=f"2px solid {color2}",
-                        height="100%",
-                        size="3",
-                        style={
-                            "& textarea": {
-                                "color": "blue"
-                            }
-                        }
+                    rx.cond(
+                        State.novedad_detalle,
+                        rx.vstack(
+                            rx.hstack(
+                                rx.text(f"Novedad:",weight="medium",size="2"),
+                                rx.text(f"{secuencial}",size="2"),
+                            ),
+                            rx.hstack(
+                                rx.text(f"Estación:",weight="medium",size="2"),
+                                rx.text(f"{State.novedad_detalle.get('BODEGA', '')}-{State.novedad_detalle.get('EESS', '')}",size="2"),
+                            ),
+                            rx.hstack(
+                                rx.text(f"Fecha:",weight="medium",size="2"),
+                                rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2"),
+                            ),
+                            rx.vstack(
+                                rx.text(f"Descripción:",weight="medium",size="2"),
+                                rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2"),
+                                spacing="0",
+                            ),
+                            rx.hstack(
+                                rx.text(f"Valor:",weight="medium",size="2"),
+                                rx.text(f"{State.novedad_detalle.get('SIGNO', '')} ${State.novedad_detalle.get('VALOR', '')}",size="2"),
+                            ),
+                            spacing="1"
+                        )
                     ),
                     width="90%",
-                    #height="30%",
+                ),   
+                #rx.box(
+                    rx.cond(
+                        State.comentario_rechazo == "",
+                        rx.box(height="1em"),
+                        rx.vstack(
+                            rx.box(
+                                rx.vstack(
+                                    rx.text(f"Motivo:",weight="medium", size="2",color="#060606"),
+                                    rx.text(f"{State.comentario_rechazo}", size="2",color="#060606"),
+                                ),
+                                width="100%",
+                                border_radius="10px 10px",
+                                border=f"2px solid {color3}",
+                                background_color="#e8bbbb",
+                                padding="1em"
+                            ),
+                        width="90%",
+                        ),
+                    ),
+                #),
+                rx.box(
+                    rx.cond(
+                        State.comentario_historial == "",
+                        rx.text_area(
+                            placeholder="Ingrese sus comentarios...",
+                            value=State.comentario,
+                            on_change=State.set_comentario,
+                            #on_blur=TextAreaBlur.set_text,
+                            #radius="large",
+                            border_radius="10px 10px",
+                            max_length=200,
+                            required=True,
+                            border=f"2px solid {color2}",
+                            height="100%",
+                            size="3",
+                        ),
+                        rx.text_area(
+                            placeholder="Ingrese sus comentarios...",
+                            value=State.comentario_historial,
+                            on_change=State.set_comentario,
+                            #on_blur=TextAreaBlur.set_text,
+                            #radius="large",
+                            border_radius="10px 10px",
+                            max_length=200,
+                            required=True,
+                            border=f"2px solid {color2}",
+                            height="100%",
+                            size="3",
+                            style={
+                                "& textarea": {
+                                    "color": "#7d0909"
+                                }
+                            }
+                        ),
+                    ),
+                    width="90%",
                 ),
                 rx.box(
                     rx.cond(
-                        State.comentario == "",
+                        State.comentario_historial == "",
                         rx.upload(
                             rx.vstack(
                                 rx.icon(
-                                    tag="files",
+                                    tag="folder-up",
                                     size=45,
                                     #color="grey",
                                     color=rx.color("gray",11),
@@ -106,9 +141,9 @@ def novedaddetail() -> rx.Component:
                         rx.upload(
                             rx.vstack(
                                 rx.icon(
-                                    tag="files",
-                                    size=25,
-                                    color=rx.color("gray",11),
+                                    tag="folder-x",
+                                    size=30,
+                                    color="#f0f0f0",
                                 ),
                                 rx.text('Documento cargado'),
                                 justify="center",
@@ -116,7 +151,7 @@ def novedaddetail() -> rx.Component:
                                 height="100%",
                             ),
                             id="upload1",
-                            bg="#f0f0f0",
+                            bg="#b6b4b4",
                             border=f"2px solid {color2}",
                             border_radius="10px 10px",
                             padding="1.3em",
@@ -128,10 +163,8 @@ def novedaddetail() -> rx.Component:
                     ),
                     width="90%",
                 ),
-                rx.hstack(
-                    rx.foreach(
-                        rx.selected_files("upload1"), rx.text
-                    )
+                rx.text(
+                    State.upload_status,
                 ),
                 rx.button(
                     rx.hstack(rx.text("Actualizar"), rx.icon("recycle")),
