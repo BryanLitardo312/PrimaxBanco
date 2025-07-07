@@ -362,6 +362,7 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_novedades(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
+        self.upload_status: str = ""
         #if files:
             #print("Atributos del archivo:", dir(files[0]))
             #print("Archivo:", files[0].name)
@@ -389,6 +390,7 @@ class State(rx.State):
                 response = supabase.storage.from_("soportes").upload(
                     f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
                 )
+                print("Respuesta de subida:", response)
 
             public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
@@ -419,6 +421,7 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_suministros(self, files: list[rx.UploadFile]):   
         request = self.router.page.params.get("request", "")
+        self.upload_status: str = ""
         
         if not files:
             self.upload_status = "¡No hay archivo seleccionado!"
@@ -473,6 +476,7 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_devoluciones(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
+        self.upload_status: str = ""
 
         if not files:
             self.upload_status = "¡No hay archivo seleccionado!"
