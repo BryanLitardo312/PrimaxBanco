@@ -116,6 +116,7 @@ class State(rx.State):
     async def cargar_novedad(self):
         self.cargando = True
         self.error = ""
+        self.upload_status: str = ""
         self.comentario: str = ""
         self.comentario_historial: str = ""
         #self.novedad_detalle = {}
@@ -147,6 +148,7 @@ class State(rx.State):
         self.suministro_detalle = {}
         self.cargando = True
         self.error = ""
+        self.upload_status: str = ""
         self.comentario: str = ""
         self.comentario_historial: str = ""
         # Obtener el secuencial de la URL
@@ -181,6 +183,7 @@ class State(rx.State):
     async def cargar_devolucion(self):
         self.cargando = True
         self.error = ""
+        self.upload_status: str = ""
         self.devolucion_detalle = {}
         self.comentario: str = ""
         self.comentario_historial: str = ""
@@ -362,7 +365,6 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_novedades(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
-        self.upload_status: str = ""
         #if files:
             #print("Atributos del archivo:", dir(files[0]))
             #print("Archivo:", files[0].name)
@@ -388,9 +390,8 @@ class State(rx.State):
 
             with open(temp_file_path, "rb") as temp_file:
                 response = supabase.storage.from_("soportes").upload(
-                    f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
+                    f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}
                 )
-                print("Respuesta de subida:", response)
 
             public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
