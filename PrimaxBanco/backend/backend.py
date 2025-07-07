@@ -445,7 +445,7 @@ class State(rx.State):
 
             with open(temp_file_path, "rb") as temp_file:
                 response = supabase.storage.from_("soportes").upload(
-                    f"Suministros/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
+                    f"Suministros/{file_name}", temp_file, {"content-type": "application/pdf"}
                 )
 
             public_url = supabase.storage.from_("soportes").get_public_url(f"Suministros/{file_name}")
@@ -500,7 +500,7 @@ class State(rx.State):
 
             with open(temp_file_path, "rb") as temp_file:
                 response = supabase.storage.from_("soportes").upload(
-                    f"Devoluciones/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
+                    f"Devoluciones/{file_name}", temp_file, {"content-type": "application/pdf"}
                 )
 
             public_url = supabase.storage.from_("soportes").get_public_url(f"Devoluciones/{file_name}")
