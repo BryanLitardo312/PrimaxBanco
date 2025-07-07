@@ -3,6 +3,7 @@ from ..backend.backend import State
 
 color2 = "rgb(130,130,130)"
 color3 = "#7d0909"
+color4 = "#e4c6c6"
 
 @rx.page(route="/novedades/[secuencial]", on_load=State.cargar_novedad)
 def novedaddetail() -> rx.Component:
@@ -22,10 +23,10 @@ def novedaddetail() -> rx.Component:
                     rx.spinner()
                 ),
                 # Mensaje de error
-                rx.cond(
-                    State.error,
-                    rx.text(State.error, color="red")
-                ),
+                #rx.cond(
+                    #State.error,
+                    #rx.text(State.error, color="red")
+                #),
                 rx.box(
                     rx.cond(
                         State.novedad_detalle,
@@ -56,26 +57,25 @@ def novedaddetail() -> rx.Component:
                     ),
                     width="90%",
                 ),   
-                #rx.box(
-                    rx.cond(
-                        State.comentario_rechazo == "",
+                rx.cond(
+                    State.comentario_rechazo == "",
+                    rx.box(height="1em"),
+                    rx.vstack(
                         rx.box(height="1em"),
-                        rx.vstack(
-                            rx.box(
-                                rx.vstack(
-                                    rx.text(f"Motivo:",weight="medium", size="2",color="#060606"),
-                                    rx.text(f"{State.comentario_rechazo}", size="2",color="#060606"),
-                                ),
-                                width="100%",
-                                border_radius="10px 10px",
-                                border=f"2px solid {color3}",
-                                background_color="#e8bbbb",
-                                padding="1em"
+                        rx.box(
+                            rx.vstack(
+                                rx.text(f"Rechazado por:",weight="medium", size="2",color="#060606"),
+                                rx.text(f"{State.comentario_rechazo}", size="2",color="#060606"),
                             ),
-                        width="90%",
+                            width="100%",
+                            border_radius="10px 10px",
+                            border=f"2px solid {color3}",
+                            background_color=color4,
+                            padding="0.75em"
                         ),
+                    width="90%",
                     ),
-                #),
+                ),
                 rx.box(
                     rx.cond(
                         State.comentario_historial == "",
@@ -182,7 +182,7 @@ def novedaddetail() -> rx.Component:
                 align="center",
                 justify="center",
                 width="23em",
-                height="100%",
+                #height="100%",
                 padding_x="2em",
                 padding_y="2em",
                 border_radius="1.5em",
@@ -192,11 +192,12 @@ def novedaddetail() -> rx.Component:
             width="100%",
             justify="center",
             align="center",
-            padding_x="2.5em",
+            #padding_x="2.5em",
             padding_top="2em",
+            margin_bottom="2em",
         ),
-        height="100vh",
-        #background_color=color_bg,
+        min_height="100vh",
+        overflow_y="auto",
         #class_name="bg-gradient-to-r from-pink-200 via-yellow-200 to-orange-200 p-8 rounded-lg"
         background="linear-gradient(to right, #f3f4f6, #d1d5db, #6b7280)",
         #class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",

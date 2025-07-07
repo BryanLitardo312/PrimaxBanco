@@ -116,6 +116,8 @@ class State(rx.State):
     async def cargar_novedad(self):
         self.cargando = True
         self.error = ""
+        self.comentario: str = ""
+        self.comentario_historial: str = ""
         #self.novedad_detalle = {}
         # Obtener el secuencial de la URL
         secuencial = self.router.page.params.get("secuencial", "")
@@ -143,6 +145,10 @@ class State(rx.State):
 
     async def cargar_suministro(self):
         self.suministro_detalle = {}
+        self.cargando = True
+        self.error = ""
+        self.comentario: str = ""
+        self.comentario_historial: str = ""
         # Obtener el secuencial de la URL
         request = self.router.page.params.get("request", "")
         try:
@@ -157,6 +163,7 @@ class State(rx.State):
             
             if response.data:
                 self.suministro_detalle = response.data[0]
+                self.comentario_historial = self.novedad_detalle.get("COMENTARIOS") or ""
                 self.comentario = self.suministro_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.suministro_detalle.get("URL_PUBLICA") or ""
                 self.comentario_rechazo = self.suministro_detalle.get("COMENTARIO_RECHAZO") or ""
@@ -175,6 +182,8 @@ class State(rx.State):
         self.cargando = True
         self.error = ""
         self.devolucion_detalle = {}
+        self.comentario: str = ""
+        self.comentario_historial: str = ""
         # Obtener el secuencial de la URL
         secuencial = self.router.page.params.get("secuencial", "")
         #print(f"Secuencial: {secuencial}")
@@ -191,6 +200,7 @@ class State(rx.State):
             
             if response.data:
                 self.devolucion_detalle = response.data[0]
+                self.comentario_historial = self.novedad_detalle.get("COMENTARIOS") or ""
                 self.comentario = self.devolucion_detalle.get("COMENTARIOS") or ""
                 self.file_url = self.devolucion_detalle.get("URL_PUBLICA") or ""
                 self.comentario_rechazo = self.devolucion_detalle.get("COMENTARIO_RECHAZO") or ""
@@ -380,7 +390,7 @@ class State(rx.State):
                     f"Novedades/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
                 )
 
-            public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/file_name")
+            public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
             self.file_url = public_url
             self.upload_status = "¡Archivo cargado!"
@@ -394,6 +404,114 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             return rx.redirect("/novedades")
+
+        except Exception as e:
+            print(f"Error al subir archivo: {e}")
+            self.upload_status = "Error en la carga"
+
+        finally:
+            if temp_file_path and os.path.exists(temp_file_path):
+                try:
+                    os.remove(temp_file_path)
+                except PermissionError as e:
+                    print(f"No se pudo eliminar el archivo temporal: {e}")
+
+    @rx.event
+    async def upload_to_supabase_suministros(self, files: list[rx.UploadFile]):   
+        request = self.router.page.params.get("request", "")
+        
+        if not files:
+            self.upload_status = "¡No hay archivo seleccionado!"
+            return
+
+        file = files[0]
+        if hasattr(file, "read"):
+            data_bytes = await file.read()
+        else:
+            data_bytes = file
+
+        file_name = f"{request}.pdf"
+        temp_dir = "./temp_files"
+        os.makedirs(temp_dir, exist_ok=True)
+        temp_file_path = os.path.join(temp_dir, file_name)
+
+        try:
+            with open(temp_file_path, "wb") as temp_file:
+                temp_file.write(data_bytes)
+
+            with open(temp_file_path, "rb") as temp_file:
+                response = supabase.storage.from_("soportes").upload(
+                    f"Suministros/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
+                )
+
+            public_url = supabase.storage.from_("soportes").get_public_url(f"Suministros/{file_name}")
+            #print(f"Archivo cargado exitosamente: {public_url}")
+            self.file_url = public_url
+            self.upload_status = "¡Archivo cargado!"
+
+            actualizacion = supabase.table("Suministros").update({
+                "COMENTARIOS": self.comentario,
+                "URL_PUBLICA": self.file_url,
+                "USUARIO" : self.email,
+                "STATUS" : "Finalizado"
+            }).eq("requests", request).execute()
+            self.comentario = ""
+            self.file_url = ""
+            return rx.redirect("/suministros")
+
+        except Exception as e:
+            print(f"Error al subir archivo: {e}")
+            self.upload_status = "Error en la carga"
+
+        finally:
+            if temp_file_path and os.path.exists(temp_file_path):
+                try:
+                    os.remove(temp_file_path)
+                except PermissionError as e:
+                    print(f"No se pudo eliminar el archivo temporal: {e}")
+
+    @rx.event
+    async def upload_to_supabase_devoluciones(self, files: list[rx.UploadFile]):   
+        secuencial = self.router.page.params.get("secuencial", "")
+
+        if not files:
+            self.upload_status = "¡No hay archivo seleccionado!"
+            return
+
+        file = files[0]
+        if hasattr(file, "read"):
+            data_bytes = await file.read()
+        else:
+            data_bytes = file
+
+        file_name = f"{secuencial}.pdf"
+        temp_dir = "./temp_files"
+        os.makedirs(temp_dir, exist_ok=True)
+        temp_file_path = os.path.join(temp_dir, file_name)
+
+        try:
+            with open(temp_file_path, "wb") as temp_file:
+                temp_file.write(data_bytes)
+
+            with open(temp_file_path, "rb") as temp_file:
+                response = supabase.storage.from_("soportes").upload(
+                    f"Devoluciones/{file_name}", temp_file, {"content-type": "application/pdf"}, upsert=True
+                )
+
+            public_url = supabase.storage.from_("soportes").get_public_url(f"Devoluciones/{file_name}")
+            #print(f"Archivo cargado exitosamente: {public_url}")
+            self.file_url = public_url
+            self.upload_status = "¡Archivo cargado!"
+
+            actualizacion = supabase.table("Devoluciones").update({
+                "COMENTARIOS": self.comentario,
+                "URL_PUBLICA": self.file_url,
+                "USUARIO" : self.email,
+                "STATUS" : "Finalizado"
+            }).eq("SECUENCIAL", secuencial).execute()
+            self.comentario = ""
+            self.file_url = ""
+            return rx.redirect("/devoluciones")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")

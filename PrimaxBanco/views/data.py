@@ -88,7 +88,7 @@ def line_chart_novedades_casos():
             },
         ),
         rx.recharts.y_axis(
-            hide=True,
+            hide=False,
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
@@ -192,8 +192,8 @@ def data() -> rx.Component:
                     rx.badge(
                         rx.cond(
                             Graphics.value_novedades,
-                            "Total en USD",
-                            "Total de casos"
+                            "Novedades en USD",
+                            "Novedades en # Casos"
                         )
                     ),
                 ),
@@ -212,8 +212,8 @@ def data() -> rx.Component:
                     rx.badge(
                         rx.cond(
                             Graphics.value_suministros,
-                            "Novedades por estación (casos)",
-                            "Suministros por estación (kits)"
+                            "Novedades por estación (# casos)",
+                            "Suministros por estación (# kits)"
                         )
                     ),
                 ),
