@@ -121,7 +121,7 @@ def barras_novedades():
             },
         ),
         rx.recharts.y_axis(
-            hide=True,
+            hide=False,
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
@@ -154,7 +154,7 @@ def barras_suministros():
             },
         ),
         rx.recharts.y_axis(
-            hide=True,
+            hide=False,
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
@@ -166,7 +166,7 @@ def barras_suministros():
         height=140,
     )
 
-@rx.page(route="/data",title="Data | Primax",description="Data en Primax Banco")
+@rx.page(route="/data",title="Data | Primax",description="Data en Primax Banco",on_load=State.verificar_sesion)
 def data() -> rx.Component:
         return rx.box(
             rx.vstack(
@@ -184,7 +184,8 @@ def data() -> rx.Component:
                     ),
                     width="100%",
                 ),
-                rx.heading('Evolución de novedades'),
+                rx.heading('Evolución diaria'),
+                rx.box(height="0.5em"),
                 rx.hstack(
                     rx.switch(
                         on_change=Graphics.set_novedades,

@@ -5,7 +5,7 @@ from ..components.table_suministros import main_table
 from ..backend.backend import Download, State
 from ..components.table_actions import comandos,comandos_suministros
 
-@rx.page(route="/suministros", title="Suministros | Primax", description="La organización es eficiencia")
+@rx.page(route="/suministros", title="Suministros | Primax", description="La organización es eficiencia", on_load=State.verificar_sesion)
 def Suministros() -> rx.Component:
     return rx.vstack(
         #navbar(),

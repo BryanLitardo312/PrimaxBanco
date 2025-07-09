@@ -280,6 +280,11 @@ class State(rx.State):
             self.devoluciones = []
 
     @rx.event
+    def verificar_sesion(self):
+        if not self.email:
+            return rx.redirect("/")
+        
+    @rx.event
     def login(self, email: str, password: str):
         try:
             response = supabase.auth.sign_in_with_password(
@@ -542,6 +547,7 @@ class Download(rx.State):
                 return
         # Crear CSV en memoria
         output = StringIO()
+        output.write('\ufeff')
         writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
         writer.writeheader()
         writer.writerows(data)
@@ -562,6 +568,7 @@ class Download(rx.State):
                 return
         # Crear CSV en memoria
         output = StringIO()
+        output.write('\ufeff')
         writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
         writer.writeheader()
         writer.writerows(data)
@@ -582,6 +589,7 @@ class Download(rx.State):
                 return
         # Crear CSV en memoria
         output = StringIO()
+        output.write('\ufeff')
         writer = csv.DictWriter(output, fieldnames=list(data[0].keys()))
         writer.writeheader()
         writer.writerows(data)
