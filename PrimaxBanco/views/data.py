@@ -125,7 +125,7 @@ def barras_novedades():
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
-            unit="$",
+            unit=" casos",
             mirror=False,
         ),
         data=Graphics.novedades_acumuladas_estacion,  # data debe ser una lista de diccionarios con las claves "uv", "pv" y "amt"
