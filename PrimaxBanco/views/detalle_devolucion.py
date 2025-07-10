@@ -164,13 +164,15 @@ def devoluciondetail() -> rx.Component:
                         rx.text(State.upload_status),
                         variant="soft",
                         color_scheme="green",
+                        size="2",
                     )),
                     ("Error", rx.badge(
                         rx.text(State.upload_status),
                         variant="soft",
                         color_scheme="tomato",
+                        size="2",
                     )),
-                    rx.box(height="1em")
+                    rx.box(height="0.5em")
                 ),
                 rx.button(
                     rx.hstack(rx.text("Actualizar"), rx.icon("recycle")),

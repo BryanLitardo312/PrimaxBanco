@@ -14,6 +14,7 @@ from datetime import datetime
 import csv
 import plotly.express as px
 import plotly.graph_objects as go
+import asyncio
 
 load_dotenv()
 url: str = os.environ.get("SUPABASE_URL")
@@ -303,7 +304,7 @@ class State(rx.State):
         except Exception as e:
             self.upload_status_sesion = "Credenciales incorrectas"
             #self.upload_status = f"Error al iniciar sesión: {str(e)}"
-            #print(f"Error de login: {str(e)}")
+            print(f"Error de login: {str(e)}")
 
     @rx.event
     def logout(self):
@@ -390,6 +391,17 @@ class State(rx.State):
         temp_file_path = os.path.join(temp_dir, file_name)
 
         try:
+            supabase.storage.from_("soportes").remove([f"Novedades/{file_name}"])
+            actualizacion = supabase.table("Novedades").update({
+                "URL_PUBLICA": None,
+                "STATUS" : "Pendiente"
+            }).eq("SECUENCIAL", secuencial).execute()
+        
+        except Exception as e:
+            print(f"Error al subir archivo: {e}")
+            self.upload_status = ""
+
+        try:
             with open(temp_file_path, "wb") as temp_file:
                 temp_file.write(data_bytes)
 
@@ -412,6 +424,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
+            await asyncio.sleep(5)
+            self.upload_status = ""
             #return rx.redirect("/novedades")
 
         except Exception as e:
@@ -428,7 +442,7 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_suministros(self, files: list[rx.UploadFile]):   
         request = self.router.page.params.get("request", "")
-        self.upload_status: str = ""
+        #self.upload_status: str = ""
         
         if not files:
             self.upload_status = "¡No hay archivo seleccionado!"
@@ -444,6 +458,17 @@ class State(rx.State):
         temp_dir = "./temp_files"
         os.makedirs(temp_dir, exist_ok=True)
         temp_file_path = os.path.join(temp_dir, file_name)
+
+        try:
+            supabase.storage.from_("soportes").remove([f"Suministros/{file_name}"])
+            actualizacion = supabase.table("Suministros").update({
+                "URL_PUBLICA": None,
+                "STATUS" : "Pendiente"
+            }).eq("SECUENCIAL", request).execute()
+        
+        except Exception as e:
+            print(f"Error al subir archivo: {e}")
+            self.upload_status = ""
 
         try:
             with open(temp_file_path, "wb") as temp_file:
@@ -468,6 +493,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
+            await asyncio.sleep(5)
+            self.upload_status = ""
             #return rx.redirect("/suministros")
 
         except Exception as e:
@@ -484,7 +511,7 @@ class State(rx.State):
     @rx.event
     async def upload_to_supabase_devoluciones(self, files: list[rx.UploadFile]):   
         secuencial = self.router.page.params.get("secuencial", "")
-        self.upload_status: str = ""
+
 
         if not files:
             self.upload_status = "¡No hay archivo seleccionado!"
@@ -500,6 +527,17 @@ class State(rx.State):
         temp_dir = "./temp_files"
         os.makedirs(temp_dir, exist_ok=True)
         temp_file_path = os.path.join(temp_dir, file_name)
+
+        try:
+            supabase.storage.from_("soportes").remove([f"Devoluciones/{file_name}"])
+            actualizacion = supabase.table("Devoluciones").update({
+                "URL_PUBLICA": None,
+                "STATUS" : "Pendiente"
+            }).eq("SECUENCIAL", secuencial).execute()
+        
+        except Exception as e:
+            print(f"Error al subir archivo: {e}")
+            self.upload_status = ""
 
         try:
             with open(temp_file_path, "wb") as temp_file:
@@ -524,6 +562,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
+            await asyncio.sleep(5)
+            self.upload_status = ""
             #return rx.redirect("/devoluciones")
 
         except Exception as e:
