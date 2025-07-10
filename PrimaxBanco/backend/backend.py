@@ -392,7 +392,7 @@ class State(rx.State):
 
         try:
             supabase.storage.from_("soportes").remove([f"Novedades/{file_name}"])
-            actualizacion = supabase.table("Novedades").update({
+            supabase.table("Novedades").update({
                 "URL_PUBLICA": None,
                 "STATUS" : "Pendiente"
             }).eq("SECUENCIAL", secuencial).execute()
@@ -425,8 +425,7 @@ class State(rx.State):
             self.file_url = ""
             self.upload_status = "Carga exitosa"
             await asyncio.sleep(5)
-            self.upload_status = ""
-            #return rx.redirect("/novedades")
+            return rx.redirect("/novedades")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
@@ -494,8 +493,7 @@ class State(rx.State):
             self.file_url = ""
             self.upload_status = "Carga exitosa"
             await asyncio.sleep(5)
-            self.upload_status = ""
-            #return rx.redirect("/suministros")
+            return rx.redirect("/suministros")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
@@ -563,8 +561,7 @@ class State(rx.State):
             self.file_url = ""
             self.upload_status = "Carga exitosa"
             await asyncio.sleep(5)
-            self.upload_status = ""
-            #return rx.redirect("/devoluciones")
+            return rx.redirect("/devoluciones")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
