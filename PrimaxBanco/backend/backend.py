@@ -424,8 +424,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
-            await asyncio.sleep(5)
-            return rx.redirect("/novedades")
+            #await asyncio.sleep(5)
+            #return rx.redirect("/novedades")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
@@ -492,8 +492,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
-            await asyncio.sleep(5)
-            return rx.redirect("/suministros")
+            #await asyncio.sleep(5)
+            #return rx.redirect("/suministros")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
@@ -560,8 +560,8 @@ class State(rx.State):
             self.comentario = ""
             self.file_url = ""
             self.upload_status = "Carga exitosa"
-            await asyncio.sleep(5)
-            return rx.redirect("/devoluciones")
+            #await asyncio.sleep(5)
+            #return rx.redirect("/devoluciones")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
