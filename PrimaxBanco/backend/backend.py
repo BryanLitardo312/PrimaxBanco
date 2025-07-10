@@ -401,7 +401,7 @@ class State(rx.State):
             public_url = supabase.storage.from_("soportes").get_public_url(f"Novedades/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
             self.file_url = public_url
-            self.upload_status = "¡Archivo cargado!"
+            #self.upload_status = "¡Archivo cargado!"
 
             actualizacion = supabase.table("Novedades").update({
                 "COMENTARIOS": self.comentario,
@@ -411,11 +411,12 @@ class State(rx.State):
             }).eq("SECUENCIAL", secuencial).execute()
             self.comentario = ""
             self.file_url = ""
-            return rx.redirect("/novedades")
+            self.upload_status = "Carga exitosa"
+            #return rx.redirect("/novedades")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
-            self.upload_status = "Error en la carga"
+            self.upload_status = "Error"
 
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
@@ -456,7 +457,7 @@ class State(rx.State):
             public_url = supabase.storage.from_("soportes").get_public_url(f"Suministros/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
             self.file_url = public_url
-            self.upload_status = "¡Archivo cargado!"
+            #self.upload_status = "¡Archivo cargado!"
 
             actualizacion = supabase.table("Suministros").update({
                 "COMENTARIOS": self.comentario,
@@ -466,11 +467,12 @@ class State(rx.State):
             }).eq("requests", request).execute()
             self.comentario = ""
             self.file_url = ""
-            return rx.redirect("/suministros")
+            self.upload_status = "Carga exitosa"
+            #return rx.redirect("/suministros")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
-            self.upload_status = "Error en la carga"
+            self.upload_status = "Error"
 
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
@@ -511,7 +513,7 @@ class State(rx.State):
             public_url = supabase.storage.from_("soportes").get_public_url(f"Devoluciones/{file_name}")
             #print(f"Archivo cargado exitosamente: {public_url}")
             self.file_url = public_url
-            self.upload_status = "¡Archivo cargado!"
+            #self.upload_status = "¡Archivo cargado!"
 
             actualizacion = supabase.table("Devoluciones").update({
                 "COMENTARIOS": self.comentario,
@@ -521,11 +523,12 @@ class State(rx.State):
             }).eq("SECUENCIAL", secuencial).execute()
             self.comentario = ""
             self.file_url = ""
-            return rx.redirect("/devoluciones")
+            self.upload_status = "Carga exitosa"
+            #return rx.redirect("/devoluciones")
 
         except Exception as e:
             print(f"Error al subir archivo: {e}")
-            self.upload_status = "Error en la carga"
+            self.upload_status = "Error"
 
         finally:
             if temp_file_path and os.path.exists(temp_file_path):
