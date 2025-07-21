@@ -51,7 +51,7 @@ realtime==2.4.3
 redis==6.2.0
 #reflex==0.7.14
 reflex==0.8.0
-reflex-hosting-cli==0.1.51
+reflex-hosting-cli==0.1.52
 rich==14.0.0
 simple-websocket==1.1.0
 six==1.17.0
