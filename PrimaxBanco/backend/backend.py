@@ -66,6 +66,7 @@ class State(rx.State):
     #print(f"URL: {url}")
     #print(f"Key: {key}")
 
+
     email: str = ""
     password: str = ""    
 
@@ -114,6 +115,7 @@ class State(rx.State):
     def close_dialog(self):
         self.show_dialog = False
     
+
     async def cargar_novedad(self):
         self.cargando = True
         self.error = ""
@@ -243,6 +245,9 @@ class State(rx.State):
     
     @rx.event
     def load_entries(self,status_filtro: str = None):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout()
         start = (self.page_novedades - 1) * self.limit_novedades
         end = start + self.limit_novedades - 1
         query = supabase.table("Novedades").select("*").order("created_at", desc=True)
@@ -256,6 +261,9 @@ class State(rx.State):
     
     @rx.event
     def load_suministros(self,status_filtro: str = None):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout()
         start = (self.page_suministros - 1) * self.limit_suministros
         end = start + self.limit_suministros - 1
         query = supabase.table("Suministros").select("*").order("created_at", desc=True)
@@ -269,6 +277,9 @@ class State(rx.State):
 
     @rx.event
     def load_devoluciones(self,status_filtro: str = None):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout()
         start = (self.page_devoluciones - 1) * self.limit_devoluciones
         end = start + self.limit_devoluciones - 1
         query = supabase.table("Devoluciones").select("*").order("created_at", desc=True)
@@ -294,9 +305,11 @@ class State(rx.State):
                     "password": password,
                 }
             )
+            
             if response.user:
                 self.upload_status_sesion = "Login exitoso"
                 return rx.redirect("/data")
+                r#eturn response.user
                 # Aquí puedes guardar el usuario en el estado si lo deseas
             else:
                 self.upload_status_sesion = "Credenciales incorrectas"
@@ -369,7 +382,10 @@ class State(rx.State):
 
 
     @rx.event
-    async def upload_to_supabase_novedades(self, files: list[rx.UploadFile]):   
+    async def upload_to_supabase_novedades(self, files: list[rx.UploadFile]):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout()  
         secuencial = self.router.page.params.get("secuencial", "")
         #if files:
             #print("Atributos del archivo:", dir(files[0]))
@@ -439,7 +455,10 @@ class State(rx.State):
                     print(f"No se pudo eliminar el archivo temporal: {e}")
 
     @rx.event
-    async def upload_to_supabase_suministros(self, files: list[rx.UploadFile]):   
+    async def upload_to_supabase_suministros(self, files: list[rx.UploadFile]):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout() 
         request = self.router.page.params.get("request", "")
         #self.upload_status: str = ""
         
@@ -507,10 +526,11 @@ class State(rx.State):
                     print(f"No se pudo eliminar el archivo temporal: {e}")
 
     @rx.event
-    async def upload_to_supabase_devoluciones(self, files: list[rx.UploadFile]):   
+    async def upload_to_supabase_devoluciones(self, files: list[rx.UploadFile]):
+        session = supabase.auth.get_session()
+        if not session or session.expires_at < time.time():
+            self.logout() 
         secuencial = self.router.page.params.get("secuencial", "")
-
-
         if not files:
             self.upload_status = "¡No hay archivo seleccionado!"
             return

@@ -166,16 +166,16 @@ def novedaddetail() -> rx.Component:
                 rx.match(
                     State.upload_status,
                     ("Carga exitosa", rx.badge(
-                        rx.text(State.upload_status),
+                        rx.text(State.upload_status,size="5"),
                         variant="soft",
                         color_scheme="green",
-                        size="2",
+                        size="3",
                     )),
                     ("Error", rx.badge(
-                        rx.text(State.upload_status),
+                        rx.text(State.upload_status,size="5"),
                         variant="soft",
                         color_scheme="tomato",
-                        size="2",
+                        size="3",
                     )),
                     rx.box(height="0.5em")
                 ),
