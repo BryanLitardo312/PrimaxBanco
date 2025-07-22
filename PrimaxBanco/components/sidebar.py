@@ -1,21 +1,24 @@
 import reflex as rx
 from ..backend.backend import State
+                
+color_letra="#0A0A0A"
+color_letra2="#FBF9F9"
 
 def sidebar_item(
     text: str, icon: str, href: str
 ) -> rx.Component:
     return rx.link(
         rx.hstack(
-            rx.icon(icon),
-            rx.text(text, size="4"),
+            rx.icon(icon,color=color_letra),
+            rx.text(text, color=color_letra,size="4"),
             width="100%",
             padding_x="0.5rem",
             padding_y="0.75rem",
             align="center",
             style={
                 "_hover": {
-                    "bg": "#9F9C9C",
-                    "color": "#0A0A0A",
+                    "bg": "white",
+                    "color": f"{color_letra}",
                 },
                 "border-radius": "0.5em",
             },
@@ -121,16 +124,17 @@ def sidebar_bottom_profile() -> rx.Component:
                 ),
                 spacing="5",
                 # position="fixed",
-                # left="0px",
-                # top="0px",
-                # z_index="5",
+                left="0px",
+                top="0px",
+                #z_index="5",
                 padding_x="1em",
                 padding_y="1.5em",
                 bg="rgb(245, 245, 245)",
                 align="start",
-                # height="100%",
-                height="650px",
                 width="16em",
+                height="100vh",  # Altura completa de la ventana
+                position="sticky",  # Opcional: sidebar fijo
+                
             ),
         ),
         rx.mobile_and_tablet(

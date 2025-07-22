@@ -54,7 +54,7 @@ def line_chart_novedades():
         ),
         data=Graphics.novedades_acumuladas,
         width="80%",
-        height=300,
+        height=200,
     )
 
 def line_chart_novedades_casos():
@@ -97,7 +97,7 @@ def line_chart_novedades_casos():
         ),
         data=Graphics.novedades_acumuladas_casos,
         width="80%",
-        height=300,
+        height=200,
     )
 
 def barras_novedades():
