@@ -1,4 +1,6 @@
 import reflex as rx
+
+from PrimaxBanco.components.sidebar import sidebar_bottom_profile
 from ..components.stats_cards_novedades import stats_cards_group, stats_cards_group_mobile
 from .navbar import navbar,navbar_mobile
 #from .table_novedades import main_table
@@ -8,63 +10,30 @@ from ..components.table_novedades import main_table
 
 @rx.page(route="/novedades", title="Novedades | Primax", description="La organización es eficiencia", on_load=State.verificar_sesion)
 def Novedades() -> rx.Component:
-    return rx.vstack(
-        #navbar(),
-        rx.tablet_and_desktop(
-            rx.center(
-                navbar(),
+    return rx.hstack(
+        sidebar_bottom_profile(), 
+            rx.vstack(
+                rx.box(height="1em"),
+                comandos(),
+                rx.center(
+                    main_table(),
+                    width="90%",
+                ),
+                rx.box(
+                    rx.text(
+                        "Primax Corporativo - Todos los derechos reservados",
+                        size="2",
+                        color="gray",
+                        text_align="center",
+                    ),
+                    width="100%",
+                    padding_y="4em",
+                ),
                 width="100%",
+                spacing="5",
+                justify="center",
+                align="center",
+                #padding_x=["2.5em", "2.5em", "3em"],
+                background_color="rgb(245, 245, 245)",
             ),
-            width="100%",
-        ),
-        rx.mobile_only(
-            rx.center(
-                navbar_mobile(),
-                width="100%",
-            ),
-            width="100%",
-        ),
-        rx.tablet_and_desktop(
-            rx.center(
-                stats_cards_group(),
-                width="100%",
-            ),
-            width="100%",
-        ),
-        rx.mobile_only(
-            rx.center(
-                stats_cards_group_mobile(),
-                width="100%",
-            ),
-            width="100%",
-        ),
-        rx.box(height="0.5em"),
-        rx.heading(
-            "Novedades bancarias",
-            size="7",
-            color="black",
-            text_align="center",
-        ),
-        rx.box(height="1em"),
-        comandos(),
-        rx.center(
-            main_table(),
-            width="90%",
-        ),
-        rx.box(
-            rx.text(
-                "Primax Corporativo - Todos los derechos reservados",
-                size="2",
-                color="gray",
-                text_align="center",
-            ),
-            width="100%",
-            padding_y="4em",
-        ),
-        width="100%",
-        spacing="5",
-        justify="center",
-        align="center",
-        #padding_x=["2.5em", "2.5em", "3em"],
-        background_color="rgb(245, 245, 245)",
     )
