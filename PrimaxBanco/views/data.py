@@ -73,7 +73,7 @@ def area_chart_novedades():
             stroke="#cccccc",
             stroke_dasharray="3 3",
             fill="#f9f9f9",
-            fill_opacity=0.3,
+            fill_opacity=0.2,
         ),
         rx.recharts.x_axis(
             data_key="FECHA",
@@ -87,7 +87,7 @@ def area_chart_novedades():
             },
         ),
         rx.recharts.y_axis(
-            hide=False,
+            hide=True,
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
@@ -96,7 +96,7 @@ def area_chart_novedades():
         ),
         data=Graphics.novedades_acumuladas,
         width="85%",
-        height=200,
+        height=240,
     )
 
 
@@ -108,14 +108,14 @@ def area_chart_novedades_casos():
             fill="#cccccc",  # Color del área
             stroke="#080808",  # Color de la línea
             stroke_width=1,
-            name="Total reportado",
+            name="Casos reportados",
             fill_opacity=0.1,  # Opacidad del área
         ),
         rx.recharts.cartesian_grid(
             stroke="#cccccc",
             stroke_dasharray="3 3",
             fill="#f9f9f9",
-            fill_opacity=0.3,
+            fill_opacity=0.2,
         ),
         rx.recharts.x_axis(
             data_key="Fecha",
@@ -129,7 +129,7 @@ def area_chart_novedades_casos():
             },
         ),
         rx.recharts.y_axis(
-            hide=False,
+            hide=True,
             type_="number",
             stroke=rx.color("gray", 12),
             axis_line=False,
@@ -138,7 +138,7 @@ def area_chart_novedades_casos():
         ),
         data=Graphics.novedades_acumuladas_casos,
         width="85%",
-        height=200,
+        height=240,
     )
 
 

@@ -199,7 +199,7 @@ def stats_card2(
         #width="30%",
         width=["100%", "100%", "30%"],
         border="4px",
-        box_shadow="0 4px 24px rgba(0,0,0,0.08)",
+        box_shadow="0 4px 24px rgba(0,0,0,0.18)",
         transition="box-shadow 0.2s",
         _hover={"box_shadow": "0 8px 32px rgba(0,0,0,0.12)", "border": "1px solid #0a0a0a"},
         #max_width="20rem",

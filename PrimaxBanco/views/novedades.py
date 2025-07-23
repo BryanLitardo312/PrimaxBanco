@@ -49,6 +49,7 @@ def Novedades() -> rx.Component:
                 area_chart_novedades(),
                 area_chart_novedades_casos(),
             ),
+            rx.box(height="0.2em"),
             comandos(),
             rx.center(
                 main_table(),
