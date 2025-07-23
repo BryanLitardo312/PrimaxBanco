@@ -10,27 +10,28 @@ def show_customer(novedad: dict):
     return rx.table.row(
         #rx.table.cell(novedad.No),
         #rx.table.cell(novedad.id),
-        rx.table.cell(novedad.get("EESS", "")),
+        rx.table.cell(novedad.get("EESS", ""),font_size="0.9em"),
         #rx.table.cell(novedad.get("BODEGA", "")),
-        rx.table.cell(novedad.get("FECHA", "")),
-        rx.table.cell(novedad.get("LUGAR", "")),
-        rx.table.cell(novedad.get("DETALLE", "")),
-        rx.table.cell(novedad.get("SECUENCIAL", "")),
-        rx.table.cell(f'{novedad.get("SIGNO", "")} ${novedad.get("VALOR", "")}',align='center'),
-        rx.table.cell(rx.badge(f'#{novedad.get("id", "")}', color_scheme="gray",variant="solid",size="3"),align="center",style={"fontWeight": "bold", "size": "2em"}),
+        rx.table.cell(novedad.get("FECHA", ""),font_size="0.9em"),
+        rx.table.cell(novedad.get("LUGAR", ""),font_size="0.9em"),
+        rx.table.cell(novedad.get("DETALLE", ""),font_size="0.9em",width="15%",white_space="nowrap"),
+        rx.table.cell(novedad.get("SECUENCIAL", ""),font_size="0.9em"),
+        rx.table.cell(f'{novedad.get("SIGNO", "")} ${novedad.get("VALOR", "")}',align='center',font_size="0.9em"),
+        rx.table.cell(rx.badge(f'#{novedad.get("id", "")}', color_scheme="indigo",variant="solid",style={"fontWeight": "bold", "fontSize": "0.9em"}),align="center",),
         rx.table.cell(
             rx.match(
                 novedad.get("STATUS"),
-                ("Pendiente", rx.badge("Pendiente", color_scheme="orange",size="3")),
-                ("Finalizado", rx.badge("Finalizado", color_scheme="green",size="3")),
-                ("Rechazado", rx.badge("Rechazado", color_scheme="tomato",size="3")),
-                rx.badge("No aplica", color_scheme="gray",size="3"),                
+                ("Pendiente", rx.badge("Pendiente", color_scheme="orange",size="2")),
+                ("Finalizado", rx.badge("Finalizado", color_scheme="green",size="2")),
+                ("Rechazado", rx.badge("Rechazado", color_scheme="tomato",size="2")),
+                rx.badge("No aplica", color_scheme="gray",size="2"),                
             ),
-            align='center'
+            align='center',
+            #font_size="0.9em"
         ),
         #rx.table.cell(novedad.get("VALOR", "")),
         #rx.table.cell(novedad.get("DESCRIPCION", "")),
-        rx.table.cell(rx.moment(novedad.get("created_at", ""), format="DD/MM/YYYY"),align='center'),
+        rx.table.cell(rx.moment(novedad.get("created_at", ""), format="DD/MM/YYYY"),align='center',font_size="0.9em"),
         rx.table.cell(
             rx.hstack(
                 rx.cond(
@@ -38,7 +39,7 @@ def show_customer(novedad: dict):
                     rx.button(
                         rx.icon("trash-2", size=20),
                         color_scheme="red",
-                        variant="solid",
+                        variant="ghost",
                         border_radius="3em",
                         size="2",
                         on_click=lambda sec=novedad.get("id", ""): State.borrar_novedad(sec),
@@ -47,7 +48,7 @@ def show_customer(novedad: dict):
                 ),
                 rx.link(
                     #rx.text("Ver más...", size="2",high_contrast=True),
-                    rx.icon("circle-chevron-right",size=30),
+                    rx.icon("circle-chevron-right",size=25),
                     #rx.icon
                     href=f"/novedades/{novedad.get("SECUENCIAL", "")}",
                     color_scheme="grass",
@@ -66,10 +67,10 @@ def show_customer(novedad: dict):
 def _header_cell(text: str, icon: str):
     return rx.table.column_header_cell(
         rx.hstack(
-            rx.icon(icon, size=18),
-            rx.text(text,size="3"),
+            rx.icon(icon, size=15),
+            rx.text(text,size="2", weight="medium"),
             align="center",
-            spacing="2",
+            spacing="1",
         ),
         background_color="rgb(0,0,0)",
         style={"color": "white", "fontWeight": "light"},
@@ -101,12 +102,12 @@ def main_table():
             on_mount=State.load_entries,
         ),
         rx.hstack(
-            rx.button("Anterior", on_click=State.set_page_novedades(State.page_novedades - 1), disabled=State.page_novedades == 1),
+            rx.button("Anterior",on_click=State.set_page_novedades(State.page_novedades - 1), disabled=State.page_novedades == 1),
             rx.text(f"Página {State.page_novedades}"),
-            rx.button("Siguiente", on_click=State.set_page_novedades(State.page_novedades + 1)),
+            rx.button("Siguiente", color="white",background_color="black", on_click=State.set_page_novedades(State.page_novedades + 1)),
             justify="center",
             width="100%",
         ),
         justify="center",
-        width="90%",
+        width="100%",
     )

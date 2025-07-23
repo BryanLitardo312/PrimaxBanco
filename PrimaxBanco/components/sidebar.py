@@ -2,15 +2,16 @@ import reflex as rx
 from ..backend.backend import State
                 
 color_letra="#0A0A0A"
-color_letra2="#FBF9F9"
+color_letra2="#010159"
+
 
 def sidebar_item(
     text: str, icon: str, href: str
 ) -> rx.Component:
     return rx.link(
         rx.hstack(
-            rx.icon(icon,color=color_letra),
-            rx.text(text, color=color_letra,size="4"),
+            rx.icon(icon,color="#474b4b",size=25),
+            rx.text(text, color="#474b4b",size="3", weight="medium"),
             width="100%",
             padding_x="0.5rem",
             padding_y="0.75rem",
@@ -18,7 +19,7 @@ def sidebar_item(
             style={
                 "_hover": {
                     "bg": "white",
-                    "color": f"{color_letra}",
+                    "color": "#828282",
                 },
                 "border-radius": "0.5em",
             },
@@ -36,7 +37,7 @@ def sidebar_items() -> rx.Component:
         sidebar_item("Suministros", "square-library", "/suministros"),
         sidebar_item("Devoluciones", "bar-chart-4", "/devoluciones"),
         sidebar_item("Quejas", "mail", "/devoluciones"),
-        spacing="1",
+        spacing="2",
         width="100%",
     )
 
@@ -46,66 +47,49 @@ def sidebar_bottom_profile() -> rx.Component:
         rx.desktop_only(
             rx.vstack(
                 rx.hstack(
-                    rx.image(
+                    rx.card(
+                        rx.image(
                         src="/primax_logo.png",
-                        width="2.25em",
+                        width="9em",
                         height="auto",
-                        border_radius="25%",
+                        #border_radius="50%",
+                        background_color="white",
+                        ),
+                        border_radius="20%",
+                        box_shadow="0 4px 24px rgba(0,0,0,0.28)",
                     ),
-                    rx.heading(
-                        "Primax", size="7", weight="bold"
-                    ),
+                    
                     align="center",
-                    justify="start",
+                    justify="center",
                     padding_x="0.5rem",
                     width="100%",
                 ),
+                rx.box(height="1.5em"),
                 sidebar_items(),
                 rx.spacer(),
                 rx.vstack(
-                    rx.vstack(
-                        #sidebar_item(
-                            #"Settings", "settings", "/#"
-                        #),
-                        rx.button(
-                            rx.hstack(
-                                rx.icon("log-out"),
-                                rx.text("Log out", size="4"),
-                            ),
-                            on_click=State.logout,
-                            width="100%",
-                            padding_x="0.5rem",
-                            padding_y="0.75rem",
-                            align="center",
-                            style={
-                                "_hover": {
-                                    "bg": "#9F9C9C",
-                                    "color": "#0A0A0A",
-                                },
-                                "border-radius": "0.5em",
-                            },
-                        ),
-                        spacing="1",
-                        width="100%",
-                    ),
-                    rx.divider(),
+                    rx.divider(height="3px"),
                     rx.hstack(
                         rx.icon_button(
                             rx.icon("user"),
                             size="3",
                             radius="full",
+                            color="black",
+                            background_color="white",
                         ),
                         rx.vstack(
                             rx.box(
                                 rx.text(
-                                    "My account",
-                                    size="3",
+                                    "Mi cuenta",
+                                    size="2",
                                     weight="bold",
+                                    color="474b4b",
                                 ),
                                 rx.text(
                                     State.email,
-                                    size="2",
+                                    size="1",
                                     weight="medium",
+                                    color="474b4b",
                                 ),
                                 width="100%",
                             ),
@@ -119,6 +103,34 @@ def sidebar_bottom_profile() -> rx.Component:
                         justify="start",
                         width="100%",
                     ),
+                    rx.vstack(
+                        #sidebar_item(
+                            #"Settings", "settings", "/#"
+                        #),
+                        rx.button(
+                            rx.hstack(
+                                rx.icon("log-out",size=20,border_color="black"),
+                                rx.text("Cerrar sesión", size="2",weight="medium"),
+                                spacing="1",
+                                #background_color=rx.color("gray",9),
+                            ),
+                            background_color="#0D0D0D",
+                            on_click=State.logout,
+                            width="100%",
+                            padding_x="0.5rem",
+                            padding_y="0.75rem",
+                            align="center",
+                            style={
+                                "_hover": {
+                                    "bg": "#c20808",
+                                    "color": "white",
+                                },
+                                "border-radius": "2em",
+                            },
+                        ),
+                        spacing="1",
+                        width="100%",
+                    ),
                     width="100%",
                     spacing="5",
                 ),
@@ -126,12 +138,13 @@ def sidebar_bottom_profile() -> rx.Component:
                 # position="fixed",
                 left="0px",
                 top="0px",
+
                 #z_index="5",
                 padding_x="1em",
                 padding_y="1.5em",
                 bg="rgb(245, 245, 245)",
                 align="start",
-                width="16em",
+                width="17em",
                 height="100vh",  # Altura completa de la ventana
                 position="sticky",  # Opcional: sidebar fijo
                 
@@ -210,7 +223,7 @@ def sidebar_bottom_profile() -> rx.Component:
                         height="100%",
                         width="20em",
                         padding="1.5em",
-                        bg="#9F9C9C",
+                        bg="#edebeb",
                     ),
                     width="100%",
                 ),
@@ -218,4 +231,6 @@ def sidebar_bottom_profile() -> rx.Component:
             ),
             padding="1em",
         ),
+        text_overflow="ellipsis",
+        overflow="hidden",
     )

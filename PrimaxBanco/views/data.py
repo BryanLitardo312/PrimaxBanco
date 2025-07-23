@@ -53,17 +53,100 @@ def line_chart_novedades():
             mirror=False,
         ),
         data=Graphics.novedades_acumuladas,
-        width="80%",
+        width="85%",
         height=200,
     )
+
+
+def area_chart_novedades():
+    return rx.recharts.area_chart(
+        rx.recharts.area(
+            data_key="VALOR",
+            type_="bumpX",
+            fill="#cccccc",  # Color del área
+            stroke="#080808",  # Color de la línea
+            stroke_width=1,
+            name="Total reportado",
+            fill_opacity=0.1,  # Opacidad del área
+        ),
+        rx.recharts.cartesian_grid(
+            stroke="#cccccc",
+            stroke_dasharray="3 3",
+            fill="#f9f9f9",
+            fill_opacity=0.3,
+        ),
+        rx.recharts.x_axis(
+            data_key="FECHA",
+            hide=True,
+        ),
+        rx.recharts.graphing_tooltip(
+            content_style={
+                "backgroundColor": rx.color("accent", 4),
+                "borderRadius": "4px",
+                "padding": "8px",
+            },
+        ),
+        rx.recharts.y_axis(
+            hide=False,
+            type_="number",
+            stroke=rx.color("gray", 12),
+            axis_line=False,
+            unit="$",
+            mirror=False,
+        ),
+        data=Graphics.novedades_acumuladas,
+        width="85%",
+        height=200,
+    )
+
+
+def area_chart_novedades_casos():
+    return rx.recharts.area_chart(
+        rx.recharts.area(
+            data_key="Acumulado",
+            type_="bumpX",
+            fill="#cccccc",  # Color del área
+            stroke="#080808",  # Color de la línea
+            stroke_width=1,
+            name="Total reportado",
+            fill_opacity=0.1,  # Opacidad del área
+        ),
+        rx.recharts.cartesian_grid(
+            stroke="#cccccc",
+            stroke_dasharray="3 3",
+            fill="#f9f9f9",
+            fill_opacity=0.3,
+        ),
+        rx.recharts.x_axis(
+            data_key="Fecha",
+            hide=True,
+        ),
+        rx.recharts.graphing_tooltip(
+            content_style={
+                "backgroundColor": rx.color("accent", 4),
+                "borderRadius": "4px",
+                "padding": "8px",
+            },
+        ),
+        rx.recharts.y_axis(
+            hide=False,
+            type_="number",
+            stroke=rx.color("gray", 12),
+            axis_line=False,
+            unit=" casos",
+            mirror=False,
+        ),
+        data=Graphics.novedades_acumuladas_casos,
+        width="85%",
+        height=200,
+    )
+
 
 def line_chart_novedades_casos():
     return rx.recharts.line_chart(
         rx.recharts.line(
             data_key="Acumulado",
             type_="linear",
-            #stroke="#8884d8",
-            #stroke="#050240",
             dot={"stroke": "#080808", "fill": "#cccccc"},
             active_dot={"stroke": "#080808", "fill": "#cccccc"},
             stroke="#080808",
@@ -96,7 +179,7 @@ def line_chart_novedades_casos():
             mirror=False,
         ),
         data=Graphics.novedades_acumuladas_casos,
-        width="80%",
+        width="85%",
         height=200,
     )
 

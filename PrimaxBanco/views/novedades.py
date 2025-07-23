@@ -1,7 +1,7 @@
 import reflex as rx
 
 from PrimaxBanco.components.sidebar import sidebar_bottom_profile
-from PrimaxBanco.views.data import line_chart_novedades, line_chart_novedades_casos
+from PrimaxBanco.views.data import area_chart_novedades, area_chart_novedades_casos, line_chart_novedades, line_chart_novedades_casos
 from ..components.stats_cards_novedades import stats_cards_group, stats_cards_group_mobile
 from .navbar import navbar,navbar_mobile
 #from .table_novedades import main_table
@@ -30,6 +30,7 @@ def Novedades() -> rx.Component:
                 ),
                 width="100%",
             ),
+            rx.box(height="0.5em"),
             rx.hstack(
                 rx.switch(
                     on_change=Graphics.set_novedades,
@@ -39,19 +40,19 @@ def Novedades() -> rx.Component:
                         Graphics.value_novedades,
                         "Novedades en USD",
                         "Novedades en # Casos"
-                    )
+                    ),
+                    style={"fontWeight": "medium", "fontSize": "0.8em"},
                 ),
             ),
-            #rx.box(height="1em"),
             rx.cond(
                 Graphics.value_novedades,
-                line_chart_novedades(),
-                line_chart_novedades_casos(),
+                area_chart_novedades(),
+                area_chart_novedades_casos(),
             ),
             comandos(),
             rx.center(
                 main_table(),
-                width="90%",
+                width="85%",
             ),
             rx.box(
                 rx.text(
@@ -64,10 +65,13 @@ def Novedades() -> rx.Component:
                 padding_y="4em",
             ),
             width="100%",
-            spacing="5",
+            spacing="3",
             justify="center",
             align="center",
             #padding_x=["2.5em", "2.5em", "3em"],
             background_color="rgb(245, 245, 245)",
+            #background_color="#edebeb",
         ),
+        background_color="white",
+
     )

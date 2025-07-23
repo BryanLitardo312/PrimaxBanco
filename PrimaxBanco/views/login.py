@@ -110,7 +110,7 @@ def login():
                 spacing="1",
                 align="center",
                 width="360px",
-                padding="2em",
+                padding="2.5em",
                 #border=f"2px solid {color_border}",
                 border_radius="30px",
                 background="rgba(255,255,255,0.3)",
