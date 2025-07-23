@@ -41,12 +41,6 @@ def novedaddetail() -> rx.Component:
                                 ),
                                 width="100%",
                             ),
-                            #rx.vstack(
-                                #rx.text(f"Descripción",weight="medium",size="2",color="white"),
-                                #rx.box(rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2",color="white"), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%"),
-                                #spacing="1",
-                                #width="100%",
-                            #),
                             rx.hstack(
                                 rx.vstack(
                                     rx.text(f"Descripción",weight="medium",size="2",color="white"),
@@ -62,7 +56,7 @@ def novedaddetail() -> rx.Component:
                                 ),
                                 width="100%",
                             ),
-                            rx.box(height="0.7em"),
+                            rx.box(height="0.5em"),
                             rx.hstack(
                                 rx.vstack(
                                     rx.text("Comentarios",weight="medium",size="2",color="white"),
@@ -109,74 +103,44 @@ def novedaddetail() -> rx.Component:
                                         border_radius="2em",
                                     ),
                                     spacing="1",
-                                    width="80%",
+                                    width="70%",
                                 ),
                                 rx.vstack(
-                                    rx.cond(
-                                        State.comentario_historial == "",
+                                    #rx.cond(
+                                        #State.comentario_historial == "",
                                         rx.vstack(
-                                            #rx.text(f"Soportes",weight="medium",size="2",color="white"),
-                                            rx.spacer(),
-                                            rx.upload(
-                                                rx.vstack(
-                                                    rx.icon(
-                                                        tag="upload",
-                                                        size=30,
-                                                        color=rx.color("gray",1),
+                                            rx.text(f"Soportes",weight="medium",size="2",color="white"),
+                                            rx.box(
+                                                rx.upload(
+                                                    rx.center(
+                                                        rx.icon(
+                                                            tag="upload",
+                                                            size=20,  # Tamaño reducido para caber en 2em
+                                                            color=rx.color("gray", 1),
                                                     ),
-                                                    justify="center",
-                                                    align="center",
-                                                    height="100%",
+                                                    id="upload1",
+                                                    bg="#3c3c3c",
+                                                    border_radius="0.50em",
+                                                    width="2em",  # Ancho fijo
+                                                    height="2em",  # Alto fijo
+                                                    display="flex",
+                                                    align_items="center",
+                                                    justify_content="center",
+                                                    #padding="0.75em",
+                                                    accept={
+                                                        "application/pdf": [".pdf"],
+                                                    },
                                                 ),
-                                                id="upload1",
-                                                bg="#3c3c3c",
-                                                border_radius="0.50em",
-                                                padding="0.75em",
-                                                height="100%",
-                                                width="100%",
-                                                accept={
-                                                    "application/pdf": [".pdf"],
-                                                },
                                             ),
-                                            align="end",
+                                            #width="30%",
                                             height="100%",
-                                            width="100%",
                                         ),
-                                        rx.vstack(
-                                            rx.spacer(),
-                                            #rx.text(f"soportes",weight="medium",size="2",color="white"),
-                                            rx.upload(
-                                                rx.vstack(
-                                                    rx.icon(
-                                                        tag="folder-x",
-                                                        size=30,
-                                                        color="#f0f0f0",
-                                                    ),
-                                                    #rx.text('¿Volver a cargar el archivo?', size="3", color="#f0f0f0"),
-                                                    justify="center",
-                                                    align="center",
-                                                    height="100%",
-                                                ),
-                                                id="upload1",
-                                                bg="#3c3c3c",
-                                                border_radius="0.50em",
-                                                padding="0.75em",
-                                                width="100%",
-                                                height="100%",
-                                                accept={
-                                                    "application/pdf": [".pdf"],
-                                                },
-
-                                            ),
-                                            align="end",
-                                            height="100%",
-                                            width="100%",
-                                        ),
-                                    ),
-                                    width="20%",
+                                    #),
+                                    width="30%",
                                     height="100%",
                                 ),
                                 width="100%",
+                                #height="3em",
                             ),
                             rx.vstack(
                                 rx.cond(
@@ -214,15 +178,22 @@ def novedaddetail() -> rx.Component:
                                 rx.box()
                             ),
                             rx.button(
-                                rx.hstack(rx.text("Actualizar"), rx.icon("recycle")),
+                                rx.hstack(rx.text("Guardar",color="black"), rx.icon("recycle",color="black")),
                                 on_click=State.upload_to_supabase_novedades(
                                     rx.upload_files(upload_id="upload1")
                                 ),
-                                bg='#0b6730',
+                                bg='#f0f0f0',
                                 size="3",
                                 width="100%",
                                 margin_bottom="3em",
                                 margin_top="1em",
+                                style={
+                                    "_hover": {
+                                        "bg": "#c4c2c2",
+                                        "color": "#c4c2c2",
+                                    },
+                                    "border-radius": "0.5em",
+                                },
                             ),
                             spacing="3"
                         ),
@@ -255,3 +226,4 @@ def novedaddetail() -> rx.Component:
         background="linear-gradient(to right, #212121, #212121, #212121)",
         #class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",
     ),
+    )
