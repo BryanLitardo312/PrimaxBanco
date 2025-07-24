@@ -1,5 +1,6 @@
 import reflex as rx
 from ..backend.backend import State
+from ..components.text_area import *
 
 color2 = "rgb(130,130,130)"
 color3 = "#7d0909"
@@ -31,13 +32,13 @@ def novedaddetail() -> rx.Component:
                                     rx.text(f"Estacion",weight="medium",size="2",color="white"),
                                     rx.box(rx.text(f"{State.novedad_detalle.get('EESS', '')}",size="2",color="white"), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%"),
                                     spacing="1",
-                                    width="70%",
+                                    width="65%",
                                 ),
                                 rx.vstack(
                                     rx.text(f"Fecha",weight="medium",size="2",color="white"),
-                                    rx.box(rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2",color="white",align="right"), bg="#3c3c3c", padding_x="1em", padding_y="0.5em", border_radius="0.5em",width="100%"),
+                                    rx.box(rx.text(f"{State.novedad_detalle.get('FECHA', '')}",size="2",color="white",align="center"), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%"),
                                     spacing="1",
-                                    width="30%",
+                                    width="35%",
                                 ),
                                 width="100%",
                             ),
@@ -46,101 +47,39 @@ def novedaddetail() -> rx.Component:
                                     rx.text(f"Descripción",weight="medium",size="2",color="white"),
                                     rx.box(rx.text(f"{State.novedad_detalle.get('DETALLE', '')}",size="2",color="white"), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%"),
                                     spacing="1",
-                                    width="80%",
+                                    width="70%",
                                 ),
                                 rx.vstack(
                                     rx.text(f"Monto",weight="medium",size="2",color="white"),
                                     rx.box(rx.text(f"{State.novedad_detalle.get('SIGNO', '')} ${State.novedad_detalle.get('VALOR', '')}",size="2",color="white",align="center"), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%",),
                                     spacing="1",
-                                    width="20%",
+                                    width="30%",
                                 ),
                                 width="100%",
                             ),
-                            rx.box(height="0.5em"),
+                            #rx.box(height="0.5em"),
                             rx.hstack(
                                 rx.vstack(
-                                    rx.text("Comentarios",weight="medium",size="2",color="white"),
-                                    rx.box(
-                                        rx.cond(
-                                            State.comentario_historial == "",
-                                            rx.text_area(
-                                                #placeholder="Ingrese sus comentarios...",
-                                                value=State.comentario,
-                                                on_change=State.set_comentario,
-                                                bg="#3c3c3c",
-                                                max_length=100,
-                                                required=True,
-                                                height="100%",
-                                                size="2",
-                                                style={
-                                                    "color": "#fbfbfb",  # Color del texto ingresado
-                                                    "::placeholder": {  # Selector correcto para el placeholder
-                                                        "color": "#fbfbfb",
-                                                        "opacity": 1,  # Debe ser 1 para que sea visible
-                                                    },
-                                                },
-                                            ),
-                                            rx.text_area(
-                                                #placeholder="Ingrese sus comentarios...",
-                                                value=State.comentario_historial,
-                                                on_change=State.set_comentario,
-                                                bg="#3c3c3c",
-                                                max_length=100,
-                                                required=True,
-                                                height="100%",
-                                                size="2",
-                                                style={
-                                                    "color": "#fbfbfb",  # Color del texto ingresado
-                                                    "::placeholder": {  # Selector correcto para el placeholder
-                                                        "color": "#fbfbfb",
-                                                        "opacity": 1,  # Debe ser 1 para que sea visible
-                                                    },
-                                                },
-                                            ),
-                                        ),
-                                        width="100%",
-                                        bg="#3c3c3c",
-                                        border_radius="2em",
+                                    rx.text("Mis comentarios",weight="medium",size="2",color="white"),
+                                    rx.cond(
+                                        State.comentario_historial=="",
+                                        texto_area(State.comentario,State.set_comentario),
+                                        texto_area(State.comentario_historial,State.set_comentario),
                                     ),
                                     spacing="1",
-                                    width="70%",
-                                ),
-                                rx.vstack(
-                                    #rx.cond(
-                                        #State.comentario_historial == "",
-                                        rx.vstack(
-                                            rx.text(f"Soportes",weight="medium",size="2",color="white"),
-                                            rx.box(
-                                                rx.upload(
-                                                    rx.center(
-                                                        rx.icon(
-                                                            tag="upload",
-                                                            size=20,  # Tamaño reducido para caber en 2em
-                                                            color=rx.color("gray", 1),
-                                                    ),
-                                                    id="upload1",
-                                                    bg="#3c3c3c",
-                                                    border_radius="0.50em",
-                                                    width="2em",  # Ancho fijo
-                                                    height="2em",  # Alto fijo
-                                                    display="flex",
-                                                    align_items="center",
-                                                    justify_content="center",
-                                                    #padding="0.75em",
-                                                    accept={
-                                                        "application/pdf": [".pdf"],
-                                                    },
-                                                ),
-                                            ),
-                                            #width="30%",
-                                            height="100%",
-                                        ),
-                                    #),
-                                    width="30%",
+                                    width="85%",
                                     height="100%",
                                 ),
-                                width="100%",
-                                #height="3em",
+                                rx.vstack(
+                                    #rx.text("",weight="medium",size="2",color="white"),
+                                    upload("upload"),
+                                    justify="end",
+                                    height="100%",
+                                    spacing="1",
+                                    width="15%",
+                                ),
+                            width="100%",
+                            align_items='end',
                             ),
                             rx.vstack(
                                 rx.cond(
@@ -195,12 +134,13 @@ def novedaddetail() -> rx.Component:
                                     "border-radius": "0.5em",
                                 },
                             ),
-                            spacing="3"
+                            spacing="3",
+                            width="100%",
                         ),
+                        rx.spinner(),
                     ),
                     width="100%",
                 ),
-                
                 spacing="4",
                 align="center",
                 justify="center",
@@ -225,5 +165,4 @@ def novedaddetail() -> rx.Component:
         #class_name="bg-gradient-to-r from-pink-200 via-yellow-200 to-orange-200 p-8 rounded-lg"
         background="linear-gradient(to right, #212121, #212121, #212121)",
         #class_name="bg-gradient-to-r from-gray-100 via-gray-300 to-gray-500 p-8 rounded-lg",
-    ),
     )

@@ -15,9 +15,9 @@ def login():
                     src="/primax_logo.png",
                     width="150px",
                     height="150px",
-                    margin_bottom="0.5em",
+                    margin_bottom="2em",
                 ),
-                rx.heading("Banca Electrónica", size="5", color="white", margin_bottom="1.5em"),
+                rx.heading("Banca Electrónica", size="5", color="white", margin_bottom="2em"),
                 #rx.text("Ingreso de credenciales", size="2",color=color_primary, margin_bottom="0.20em"),
                 rx.input(
                     placeholder="Correo electrónico",
@@ -34,7 +34,7 @@ def login():
                     size="3",
                     background="white",
                 ),
-                rx.box(height="1em"),
+                rx.box(height="1.5em"),
                 rx.input(
                     placeholder="Contraseña",
                     type="password",
@@ -67,7 +67,7 @@ def login():
                     justify="end",
                     width="100%",
                 ),
-                rx.box(height="0.5em"),
+                rx.box(height="1em"),
                 rx.button(
                     rx.hstack(
                         rx.text("Iniciar sesión",weight="medium"),
@@ -80,7 +80,13 @@ def login():
                     size="3",
                     font_weight="bold",
                     margin_bottom="1em",
-                    on_click=lambda: State.login(State.email, State.password),  # Aquí iría tu lógica de login
+                    on_click=lambda: State.login(State.email, State.password),
+                    style={
+                        "_hover": {
+                            "bg": "#EC6B15",
+                            "color": "white",
+                        },
+                    },
                 ),
                 rx.box(height="1em"),
                 rx.cond(
@@ -107,7 +113,7 @@ def login():
                     open=State.show_dialog,
                     #on_open_change=lambda value: State.close_dialog() if not value else None,
                 ),
-                spacing="1",
+                spacing="0",
                 align="center",
                 width="360px",
                 padding="2.5em",
