@@ -70,3 +70,31 @@ def upload (icono) -> rx.Component:
             "application/pdf": [".pdf"],
         },
     ),
+
+def info(titulo,variable,porcentaje,align) -> rx.Component:
+    return rx.vstack(
+        rx.text(f"{titulo}",weight="medium",size="2",color="white"),
+        rx.box(rx.text(variable,size="1",color="white",align=align), bg="#3c3c3c", padding="0.5em", border_radius="0.5em",width="100%"),
+        spacing="1",
+        width=porcentaje,
+    ),
+
+
+def match() -> rx.Component:
+    return rx.match(
+        State.upload_status,
+        ("Carga exitosa", rx.badge(
+            rx.text(State.upload_status,size="5"),
+            variant="soft",
+            color_scheme="green",
+            size="3",
+        )),
+        ("Error", rx.badge(
+            rx.text(State.upload_status,size="5"),
+            variant="soft",
+            color_scheme="tomato",
+            size="3",
+        )),
+        rx.box()
+    ),
+#{State.novedad_detalle.get('EESS', '')}

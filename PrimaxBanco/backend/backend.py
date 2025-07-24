@@ -115,7 +115,7 @@ class State(rx.State):
     def close_dialog(self):
         self.show_dialog = False
     
-
+    
     async def cargar_novedad(self):
         self.cargando = True
         self.error = ""
