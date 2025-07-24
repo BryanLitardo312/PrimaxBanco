@@ -54,7 +54,7 @@ def show_customer(novedad: dict):
     return rx.table.row(
         #rx.table.cell(novedad.No),
         #rx.table.cell(novedad.id),
-        rx.table.cell(rx.badge(f'#{novedad.get("id", "")}', color_scheme="gray",high_contrast=True,variant="solid",style={"fontWeight": "bold", "fontSize": "1em"}),align="center",),
+        rx.table.cell(rx.badge(f'#{novedad.get("id", "")}', color_scheme="gray",high_contrast=True,variant="solid",style={"fontWeight": "bold", "fontSize": "0.9em"}),align="center",),
         rx.table.cell(novedad.get("EESS", ""),font_size="0.9em"),
         #rx.table.cell(novedad.get("BODEGA", "")),
         rx.table.cell(novedad.get("FECHA", ""),font_size="0.9em"),
